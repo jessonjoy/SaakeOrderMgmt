@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition template="/template/template.xhtml">
+        <ui:define name="title">
+            <h:outputText value="List Customers"></h:outputText>
+        </ui:define>
+        <ui:define name="content">
+            <h:form>
+                <ui:include src="/template/messages.xhtml"/>
+
+                <p:toolbar styleClass="noBorder invoiceListToolbar noBottomBorderRadius">
+                    <p:toolbarGroup align="left">  
+                        <p:button value="New Customer" icon="ui-icon-person" styleClass="newInvoiceBtn" outcome="create" />                          
+                    </p:toolbarGroup>                                       
+                    <p:toolbarGroup align="right" style="margin-right: 10px" rendered="false">                                           
+                        <p:commandButton type="button" value="Filter" icon="ui-icon-search" onclick="searchPanel.toggle();
+                                advSearchPanel.collapse();" /> 
+                        <p:separator/>
+                        <p:spacer/> 
+                    </p:toolbarGroup>
+                </p:toolbar>
+                <p:spacer height="10"/>
+
+                <p:dataTable id="customerTable" value="#{customerController.items}" var="cust" styleClass="invoiceList dataListStyle1 font16"
+                             rowIndexVar="rows" 
+                             paginator="true" rows="10" paginatorAlwaysVisible="true" paginatorPosition="bottom" 
+                             paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                             rowsPerPageTemplate="5,10,15,20,25,50,100" widgetVar="customerTable"  >                      
+                    <p:column sortBy="#{cust.customerId}" headerText="Customer Id" width="5%" >  
+                        <f:facet name="header">
+                            <h:outputText value="Id"/>
+                        </f:facet>
+                        <h:outputText value="#{cust.customerId}" />
+                    </p:column>
+                    <p:column sortBy="#{cust.lastName}" headerText="Customer Name" width="15%">
+                        <f:facet name="header">
+                            <h:outputText value="Name"/>
+                        </f:facet>
+                        <h:outputText value="#{cust.firstName}"/>
+                        <h:outputText value="#{cust.middleName}"/>
+                        <h:outputText value="#{cust.lastName}"/>
+                        <br/>
+                        <h:outputText value="#{cust.companyName}" style="color: maroon"/>
+                    </p:column>                       
+                  
+                    <p:column sortBy="item.addressLine1" headerText="Address" width="40%">  
+                        <f:facet name="header">
+                            <h:outputText value="Address"/>
+                        </f:facet>
+                        <h:outputText value="#{cust.addressLine1}"/>
+                        <h:outputText value="#{cust.addressLine2}"/>
+                        <br/>
+                        <h:outputText value="#{cust.city}"/>
+                        <h:outputText value=", }" rendered="#{not empty cust.stateProvince}"/>
+                        <h:outputText value="#{cust.stateProvince}"/>
+                        <h:outputText value=", }" rendered="#{not empty cust.country}"/>
+                        <h:outputText value="#{cust.country}"/>
+                        <br/>
+                        <h:outputText value="#{cust.email}"/>
+                        <br/>
+                        <h:outputText value="#{cust.mobileNum}"/>
+                    </p:column>                       
+                    <p:column headerText="Vehicles" width="10%" sortBy="#{fn:length(cust.customerVehicles)}" >
+                        <f:facet name="header">
+                            <h:outputText value="Vehicles"/>
+                        </f:facet>
+                        <h:outputText value="#{fn:length(cust.customerVehicles)}"/>                                                   
+                    </p:column>                                               
+                    <p:column headerText="Work Orders" width="10%" sortBy="#{fn:length(cust.workOrders)}">
+                        <f:facet name="header">
+                            <h:outputText value="Work Orders"/>
+                        </f:facet>
+                        <h:outputText value="#{fn:length(cust.workOrders)}"/>                                                   
+                    </p:column>                                               
+                    <p:column  width="20%" style="font-size:10px" >
+                        <f:facet name="header">
+                            <h:outputText value="&nbsp;"/>
+                        </f:facet>
+                        <h:link value="View" outcome="view?faces-redirect=true" style="float: left"
+                                onmouseover="jQuery(this).addClass('bold')"
+                                onmouseout="jQuery(this).removeClass('bold')"
+                                styleClass="hoverActions padRight10" includeViewParams="true">                                                        
+                            <f:param name="id" value="#{cust.customerId}"/>
+                            <h:graphicImage url="/resources/images/invoice.png" width="16" height="16" alt="View" styleClass="hoverActions" rendered="false"/>
+                        </h:link>
+
+                        <h:link value="Edit" outcome="edit?faces-redirect=true" 
+                                onmouseover="jQuery(this).addClass('bold')"
+                                onmouseout="jQuery(this).removeClass('bold')"
+                                styleClass="hoverActions padRight10" includeViewParams="true" style="float: left;overflow: hidden">
+                            <f:param name="id" value="#{cust.customerId}"/>                            
+                            <h:graphicImage url="/resources/images/edit-black-2.png" width="16" height="16" alt="Edit" styleClass="hoverActions" rendered="false"/>
+                        </h:link>
+
+                        <p:commandLink value="Remove" action="#{customerController.softDelete}" style="float: left;overflow: hidden"
+                                       onmouseover="jQuery(this).addClass('bold')"
+                                       onmouseout="jQuery(this).removeClass('bold')"
+                                       styleClass="hoverActions" onclick="if(!confirm('Are you sure you want to delete ?')) return false;"
+                                       update="customerTable">
+                            <h:graphicImage url="/resources/images/black_delete.png" width="12" height="12" alt="Delete" styleClass="hoverActions" rendered="false"/>
+                            <f:setPropertyActionListener target="#{customerController.current}" value="#{cust}"/>
+
+                        </p:commandLink>  
+                    </p:column> 
+                    <f:facet name="footer">  
+                        Total #{fn:length(customerController.items)} Customers.
+                    </f:facet>
+                </p:dataTable>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+
+</html>

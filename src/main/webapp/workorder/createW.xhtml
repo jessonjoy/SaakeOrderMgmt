@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+      xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+    <ui:composition template="/template/template.xhtml">    
+        <ui:define name="content"> 
+            <h:form prependId="false"> 
+                <ui:param name="source" value="createWorkOrder"/>
+                <ui:include src="/template/messages.xhtml">
+                    <ui:param name="source" value="#{source}"/>
+                </ui:include>
+                <h:panelGroup id="sideBarPG" layout="block" styleClass="right-tab" rendered="#{not empty workOrderCtrl.current.customerId}">
+                    <h:commandLink action="#{workOrderCtrl.save}" styleClass="sidebar-right-round" style="margin-top:50px;margin-right:-50px;">                    
+                        <h:graphicImage id="save-img1" styleClass="save-img"  url="/resources/images/check_black.png" alt="Save" />
+                        <p:tooltip for="save-img1" value="Save WorkOrder" />
+                    </h:commandLink>
+                    <h:commandLink action="list.jsf?faces-redirect=true" styleClass="sidebar-right-round" style="margin-top:125px;margin-right:-50px;">
+                        <h:graphicImage id="cancel-img" class="cancel-img" url="/resources/images/cancel_black.png" alt="Cancel"/>
+                        <p:tooltip for="cancel-img" value="Cancel Edit WorkOrder" />
+                    </h:commandLink> 
+                </h:panelGroup>
+                <p:wizard flowListener="#{workOrderCtrl.onFlowProcess}" showNavBar="true" showStepStatus="true" style="width:100%" >
+                    <p:tab id="woCustTab" title="Customer" titleStyle="background-color: #e3e2e2!important;" >
+                        <ui:include src="inc_addEdit_custInfo.xhtml"/>                    
+                    </p:tab>
+
+                    <p:tab id="woDescTab" title="Description">
+                        <ui:include src="inc_addEdit_woDesc.xhtml"/> 
+                    </p:tab>
+
+                    <p:tab id="woItemsTab" title="Work Order">
+                        <ui:include src="inc_addEdit_woItems.xhtml"/>                          
+                    </p:tab>
+                    
+                    <p:tab id="woPmtTab" title="Payment" >
+                        <ui:include src="inc_addEdit_woPayment.xhtml">
+                            <ui:param name="controller" value="#{workOrderCtrl}" />
+                        </ui:include>                          
+                    </p:tab>
+                    
+                    <p:tab id="woAsgnTab" title="Assignment">
+                        <ui:include src="inc_addEdit_woAssign.xhtml"/> 
+                    </p:tab>                                        
+                </p:wizard>
+            </h:form>     
+        </ui:define>
+    </ui:composition>
+</html>

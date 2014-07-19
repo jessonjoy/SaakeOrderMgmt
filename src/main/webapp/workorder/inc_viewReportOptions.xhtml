@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <ui:composition>
+        <ui:include src="/template/messages.xhtml">
+            <ui:param name="source" value="viewRptOpt"/>
+        </ui:include>
+        <p:fieldset legend="Report View Options" style="layout:block" styleClass="noBackground">                                                
+
+            <h:panelGrid columns="2" style="border:0px" columnClasses="noBackground textLeft noBorder, noBackground noBorder" width="100%" >
+                <h:outputLabel value="Show Item Amounts" for="category" styleClass="bold" />
+                <h:selectOneMenu id="showItemAmt" value="#{controller.viewOptions.showItemAmounts}" >
+                    <f:selectItem itemLabel="Yes" itemValue="true"/>
+                    <f:selectItem itemLabel="No" itemValue="false"/>
+                </h:selectOneMenu>
+                
+                <h:outputLabel value="Show Unit Price" for="category" styleClass="bold" />
+                <h:selectOneMenu id="showUnitPrice" value="#{controller.viewOptions.showUnitPrice}" >
+                    <f:selectItem itemLabel="Yes" itemValue="true"/>
+                    <f:selectItem itemLabel="No" itemValue="false"/>
+                </h:selectOneMenu>
+
+                <h:outputLabel value="Show Total Amount" for="category" styleClass="bold" />
+                <h:selectOneMenu id="showTotalAmt" value="#{controller.viewOptions.showTotalAmount}" >
+                    <f:selectItem itemLabel="Yes" itemValue="true"/>
+                    <f:selectItem itemLabel="No" itemValue="false"/>
+                </h:selectOneMenu>
+                
+                <h:outputLabel value="Show Assigned User" for="category" styleClass="bold" />
+                <h:selectOneMenu id="showAssignedUser" value="#{controller.viewOptions.showUserAssigned}" >
+                    <f:selectItem itemLabel="Yes" itemValue="true"/>
+                    <f:selectItem itemLabel="No" itemValue="false"/>
+                </h:selectOneMenu>
+            </h:panelGrid>
+        </p:fieldset>
+
+        <br/>
+
+        <div style="border:1px groove lightgray"></div>
+        <br/>            
+    </ui:composition>
+</html>

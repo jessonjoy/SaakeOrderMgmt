@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <ui:composition>
+        <h:panelGroup>
+            <h:outputText value="Notes" styleClass="font14 bold"/>         
+            <p:commandLink oncomplete="addNotesPopup.show()" actionListener="#{workOrderCtrl.initWorkOrderNotes}" style="margin-left:10px">
+                <h:graphicImage id="notes-img" url="/resources/images/plus_black.png" alt="Add" styleClass="notes-img" />
+                <p:tooltip for="notes-img" value="Add Notes" showEffect="size"/>
+                <f:ajax event="click" listener="#{workOrderCtrl.initWorkOrderNotes}"/>
+            </p:commandLink> 
+        </h:panelGroup>
+        <p:dataTable style="width: 100%;" styleClass="woNotesClass" 
+                     value="#{workOrderCtrl.current.notes}" var="note"
+                     rowIndexVar="row">                    
+            <p:column >
+                <h:outputText value="#{note.createdBy}" />
+            </p:column>
+            <p:column >
+                <h:outputText value="#{note.createdOn}"/>
+            </p:column>                        
+            <p:column >
+                <h:outputText value="#{note.notes}"/>
+            </p:column>                        
+        </p:dataTable>
+    </ui:composition>
+</html>

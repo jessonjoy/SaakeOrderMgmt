@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <ui:composition>
+        <h:panelGroup layout="block" class="noBorder borderRound10 viewInfo" >
+            <h:panelGrid >
+                <p:outputLabel value="Work Description" styleClass="label1"/>
+                <p:inputTextarea id="probDescText" value="#{workOrderCtrl.current.custWorkDesc}" cols="98" rows="10" style="font-size: 14px" />
+
+                <p:outputLabel value="#{bundle.WoUpoadDocWiz}" styleClass="label1"/>
+                <p:fileUpload />
+            </h:panelGrid>
+        </h:panelGroup>
+    </ui:composition>
+</html>

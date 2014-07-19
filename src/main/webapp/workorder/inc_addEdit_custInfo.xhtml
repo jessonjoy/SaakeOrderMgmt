@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <ui:composition>
+        <h:panelGroup id="customerPanelGroup" layout="block" class="noBorder borderRound10 viewInfo" >
+            <h:panelGrid >
+                <h:panelGroup style="height: 250px">
+                    <p:outputLabel value="Customer Info" for="custSugg" styleClass="label1"/>
+                    <p:commandButton id="changeCusBtn" image="change-cust-image"  ajax="true"  rendered="#{not empty workOrderCtrl.current.customerId}"
+                                     style="font-size: 9px!important;margin-left: 10px; background:url('../resources/images/edit_pen-20.png') no-repeat; background-size: 16px 16px" title="Change"
+                                     actionListener="#{workOrderCtrl.changeCustomer}" update="customerPanelGroup" >
+                    </p:commandButton>
+                    <p:commandButton id="addCusBtn" image="add-cust-image" onclick="addCusPopup.show()" ajax="true" rendered="#{empty workOrderCtrl.current.customerId}"
+                                     style="font-size: 9px!important;margin-left: 10px; background:url('../resources/images/person_add-20.png') no-repeat" title="Add"
+                                     update="customerPanelGroup"/>
+                </h:panelGroup>
+                <h:panelGroup rendered="#{empty workOrderCtrl.current.customerId}">
+                    <p:autoComplete id="custSugg" value="#{workOrderCtrl.current.customerId}" 
+                                    completeMethod="#{customerController.suggestCustomer}"  
+                                    var="cust" itemLabel="#{cust.firstName}" dropdown="true" itemValue="#{cust}" size="50" 
+                                    scrollHeight="500"
+                                    queryDelay="2" >                                        
+                        <p:column>  
+                            <f:facet name="header">
+                                <h:outputText value="Customer Name" styleClass="bold"/>
+                            </f:facet>
+                            <h:outputText value="#{cust.firstName} #{cust.lastName}"/> 
+                        </p:column> 
+                        <p:column>  
+                            <f:facet name="header">
+                                <h:outputText value="Company Name" styleClass="bold"/>
+                            </f:facet>
+                            <h:outputText value="#{cust.companyName}"/> 
+                        </p:column>
+                        <p:column>  
+                            <f:facet name="header">
+                                <h:outputText value="Address" styleClass="bold"/>
+                            </f:facet>
+                            <h:outputText value="#{cust.addressLine1}"/> 
+                            <br/>
+                            <h:outputText value="#{cust.city}"/> 
+                            <h:outputText value=", " rendered="#{not empty cust.country}"/> 
+                            <h:outputText value="#{cust.country}"/> 
+                            <br/>
+                            <h:outputText value="#{cust.mobileNum}"/> 
+                        </p:column>  
+                        <f:ajax event="itemSelect" listener="#{workOrderCtrl.identifyVehicle}" render="@form"/>
+                    </p:autoComplete>                                                                                      
+                </h:panelGroup>
+                <h:panelGrid columns="4" width="100%" rendered="#{not empty workOrderCtrl.current.customerId}" 
+                             cellpadding="5" cellspacing="10"
+                             columnClasses="viewCustLbl noBorder padRight50 padRight50,viewCustVal noBorder padRight50, viewCustLbl noBorder padRight50 padRight50,viewCustVal noBorder padRight50  " 
+                             >
+                    <h:outputLabel value="First Name:" />
+                    <h:outputText value="#{workOrderCtrl.current.customerId.firstName}" />
+                    <h:outputLabel value="Last Name:"  />
+                    <h:outputText value="#{workOrderCtrl.current.customerId.lastName}" />
+                    <h:outputLabel value="Mobile #:" />
+                    <h:outputText value="#{workOrderCtrl.current.customerId.mobileNum}" />
+                    <p:spacer/>
+                    <p:spacer/>
+                    <h:outputLabel value="Company Name:" />
+                    <h:outputText value="#{workOrderCtrl.current.customerId.companyName}" />
+                    <p:spacer/>
+                    <p:spacer/>
+                    <h:outputLabel value="Address:" />
+                    <h:panelGroup>
+                        <h:outputText value="#{workOrderCtrl.current.customerId.addressLine1}" />
+                        <h:outputText value="#{workOrderCtrl.current.customerId.city}" />
+                        <h:outputText value=", " rendered="#{not empty workOrderCtrl.current.customerId.country}"/>
+                        <h:outputText value="#{workOrderCtrl.current.customerId.country}" />
+                    </h:panelGroup>
+
+                </h:panelGrid>
+
+            </h:panelGrid>
+            <p:separator style="margin: 5px 0 5px 0" rendered="#{not empty workOrderCtrl.current.customerId}" />
+            <h:panelGrid id="vehMainPanel" rendered="#{not empty workOrderCtrl.current.customerId}" >
+                <h:panelGroup>
+                    <p:outputLabel value="Vehicle" for="vehSugg" styleClass="label1"/>
+                    <p:commandButton image="change-cust-image"  rendered="#{workOrderCtrl.changeVehicleIndicator}"
+                                     style="font-size: 9px!important;margin-left: 10px; background:url('../resources/images/edit_pen-20.png') no-repeat; background-size: 16px 16px" title="Change"
+                                     update="vehMainPanel" action="#{workOrderCtrl.changeVehicle}" >
+                    </p:commandButton>
+                    <p:commandButton image="add-cust-image" rendered="#{empty workOrderCtrl.current.vehicle}"
+                                     style="margin-left:10px;font-size: 9px!important;background:url('../resources/images/plus_black.png') no-repeat" title="Add"
+                                     actionListener="#{workOrderCtrl.initNewVehicleToWorkOrder}" update="vehMainPanel"/>
+
+                </h:panelGroup>                                
+                <h:panelGroup rendered="#{empty workOrderCtrl.current.vehicle and not empty workOrderCtrl.current.customerId and not empty workOrderCtrl.current.customerId.customerVehicles and not workOrderCtrl.addNewVechicle}">
+                    <p:autoComplete id="vehSugg" value="#{workOrderCtrl.current.vehicle}" completeMethod="#{workOrderCtrl.suggestVehicle}"  
+                                    var="veh" itemLabel="#{veh.model}" dropdown="true" itemValue="#{veh}" size="50" scrollHeight="150"
+                                    queryDelay="2">                                        
+                        <p:column>  
+                            <f:facet name="header">
+                                <h:outputText value="Year" styleClass="bold"/>
+                            </f:facet>
+                            <h:outputText value="#{veh.year}"/> 
+                        </p:column> 
+                        <p:column>  
+                            <f:facet name="header">
+                                <h:outputText value="Make" styleClass="bold"/>
+                            </f:facet>
+                            <h:outputText value="#{veh.make}"/> 
+                        </p:column> 
+                        <p:column>  
+                            <f:facet name="header">
+                                <h:outputText value="Model" styleClass="bold"/>
+                            </f:facet>
+                            <h:outputText value="#{veh.model}"/> 
+                        </p:column>
+                        <p:column>  
+                            <f:facet name="header">
+                                <h:outputText value="VIN" styleClass="bold"/>
+                            </f:facet>
+                            <h:outputText value="#{veh.vin}"/> 
+                        </p:column>  
+                        <p:ajax event="itemSelect" update="vehMainPanel" />
+                    </p:autoComplete>                                                                         
+                </h:panelGroup>
+
+                <h:panelGrid id="invVehPanel1" columns="4" width="100%" cellpadding="5" cellspacing="10"
+                             rendered="#{not empty workOrderCtrl.current.vehicle and not workOrderCtrl.addNewVechicle}"
+                             columnClasses="viewCustLbl noBorder padRight50 padRight50,viewCustVal noBorder padRight50, viewCustLbl noBorder padRight50 padRight50,viewCustVal noBorder padRight50  " 
+                             >
+                    <h:outputLabel value="Year:" />
+                    <h:outputText value="#{workOrderCtrl.current.vehicle.year}" />
+                    <h:outputLabel value="Make:"  />
+                    <h:outputText value="#{workOrderCtrl.current.vehicle.make}" />
+                    <h:outputLabel value="Model:" />
+                    <h:outputText value="#{workOrderCtrl.current.vehicle.model}" />
+                    <h:outputLabel value="Vin #:" />
+                    <h:outputText value="#{workOrderCtrl.current.vehicle.vin}" />                            
+                    <h:outputLabel value="Mileage:" />
+                    <h:inputText value="#{workOrderCtrl.current.vehicle.mileage}" />                            
+                </h:panelGrid>
+                <h:panelGrid id="invVehPanel2" columns="4" width="100%" cellpadding="5" cellspacing="10"
+                             rendered="#{workOrderCtrl.addNewVechicle}"
+                             columnClasses="viewCustLbl noBorder padRight50 padRight50,viewCustVal noBorder padRight50, viewCustLbl noBorder padRight50 padRight50,viewCustVal noBorder padRight50  " 
+                             >
+                    <h:outputLabel value="Year:"  />                  
+                    <h:selectOneMenu value="#{workOrderCtrl.current.vehicle.year}" >
+                        <f:selectItems value="#{listCtrl.vehYearsListSI}" />
+                    </h:selectOneMenu>
+                    <h:outputLabel value="Make:" />
+                    <h:inputText value="#{workOrderCtrl.current.vehicle.make}" disabled="true" size="5" />
+                    <h:outputLabel value="Model:" />
+                    <h:inputText value="#{workOrderCtrl.current.vehicle.model}" size="10"/>
+                    <h:outputLabel value="Mileage:" />                                
+                    <h:inputText value="#{workOrderCtrl.current.vehicle.mileage}" size="8"/>   
+                    <h:outputLabel value="VIN:" />
+                    <h:inputText value="#{workOrderCtrl.current.vehicle.vin}" size="17" />                            
+
+                </h:panelGrid>
+            </h:panelGrid>
+
+        </h:panelGroup>
+    </ui:composition>
+</html>
