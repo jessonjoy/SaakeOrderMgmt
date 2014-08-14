@@ -715,6 +715,10 @@ public class Utils {
         return (value == null || value.doubleValue() == 0) ? null : value.doubleValue();
     }
 
+    public static Double getDoubleValue(Double value) {
+        return (value != null) ? value : 0.0;
+    }
+
     /**
      * @param milliSec long
      * @return String

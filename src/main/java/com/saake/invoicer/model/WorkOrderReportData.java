@@ -4,7 +4,6 @@
  */
 package com.saake.invoicer.model;
 
-import com.saake.invoicer.entity.Customer;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -17,11 +16,13 @@ public class WorkOrderReportData implements Serializable {
     
     private Integer workOrderId ;
     private String workOrderNumber;
+    private String woDescription;    
     private String notes;    
     private String status;    
     private Date workOrderDate;    
     private Double discount;    
     private Double amount;
+    private Double totPaidAmt = 0.0;
     private Double advanceAmount;
 
     private String companyName;
@@ -45,6 +46,7 @@ public class WorkOrderReportData implements Serializable {
     private String assignee;
 
     private List<InvoiceItemsData> workOrderItems;
+    private List<PaymentsData> payments;
 
     public Integer getWorkOrderId() {
         return workOrderId;
@@ -254,4 +256,27 @@ public class WorkOrderReportData implements Serializable {
         this.assignee = assignee;
     }           
 
+    public List<PaymentsData> getPayments() {
+        return payments;
+    }
+
+    public void setPayments(List<PaymentsData> payments) {
+        this.payments = payments;
+    }
+
+    public String getWoDescription() {
+        return woDescription;
+    }
+
+    public void setWoDescription(String woDescription) {
+        this.woDescription = woDescription;
+    }       
+
+    public Double getTotPaidAmt() {
+        return totPaidAmt;
+    }
+
+    public void setTotPaidAmt(Double totPaidAmt) {
+        this.totPaidAmt = totPaidAmt;
+    }       
 }

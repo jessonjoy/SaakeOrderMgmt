@@ -4,11 +4,13 @@
  */
 package com.saake.invoicer.reports;
 
+import com.saake.invoicer.entity.Transaction;
 import com.saake.invoicer.entity.Vehicle;
 import com.saake.invoicer.entity.WorkOrder;
 import com.saake.invoicer.entity.WorkOrderItems;
 import com.saake.invoicer.model.InvoiceItemsData;
 import com.saake.invoicer.model.InvoiceReportData;
+import com.saake.invoicer.model.PaymentsData;
 import com.saake.invoicer.model.ReportViewOptions;
 import com.saake.invoicer.model.WorkOrderReportData;
 import com.saake.invoicer.util.Constants;
@@ -22,6 +24,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -72,6 +75,7 @@ public class ReportHelper {
             dat.setAmount(viewOptions.showTotalAmount? wo.getAmount() : null);
             dat.setWorkOrderDate(wo.getWorkOrderDate());
             dat.setWorkOrderItems(convertWorkOrderItems(wo));
+            dat.setPayments(viewOptions.showPaymentHistory? convertPayments(wo, dat):null);
             dat.setAddressLine1(wo.getCustomerId().getAddressLine1());
             dat.setAddressLine2(wo.getCustomerId().getAddressLine2());
             dat.setCity(wo.getCustomerId().getCity());
@@ -81,7 +85,7 @@ public class ReportHelper {
             dat.setLastName(wo.getCustomerId().getLastName());
             dat.setStateProvince(wo.getCustomerId().getStateProvince());
             dat.setMobileNum(wo.getCustomerId().getMobileNum());            
-            //dat.setNotes(wo.getNotes());            
+            dat.setNotes(wo.getCustWorkDesc());            
             dat.setWorkOrderId(wo.getWorkOrderId());            
             
             for(InvoiceItemsData datWOItem : dat.getWorkOrderItems()){
@@ -179,7 +183,8 @@ public class ReportHelper {
         
         if(Utils.notBlank(templateName)){
             try{
-                is = Thread.currentThread().getContextClassLoader().getResourceAsStream("com/saake"+Constants.contextName+"/invoicer/reports/"+templateName);
+//                is = Thread.currentThread().getContextClassLoader().getResourceAsStream("com"+Constants.contextName+"/invoicer/reports/"+templateName);
+                is = Thread.currentThread().getContextClassLoader().getResourceAsStream("reports/"+templateName);
 
                 if (is != null) {
                     jReport = (JasperReport) JRLoader.loadObject(is);
@@ -292,13 +297,18 @@ public class ReportHelper {
         @Override
         public File resolveFile(String fileName) {
             URI uri;
+            File file = null;
             try {
-                uri = new URI(this.getClass().getResource(fileName).getPath());
-                return new File(uri.getPath());
+                URL urlImg = this.getClass().getResource("/reports/"+fileName);
+                
+                if(urlImg != null){
+                    uri = new URI(urlImg.getPath());
+                    file = new File(uri.getPath());
+                }                
             } catch (URISyntaxException e) {
                 log.error("",e);
-                return null;
             }
+            return file;
         }
     };
 
@@ -331,4 +341,26 @@ public class ReportHelper {
         viewOptions = viewOptions1;
         streamPdf(wo, Boolean.FALSE);    
     }    
+
+    private static List<PaymentsData> convertPayments(WorkOrder workOrder, WorkOrderReportData dat) {
+        List<PaymentsData> list = new ArrayList<>();
+        
+       if(Utils.notEmpty(workOrder.getTransactions())){
+        for(Transaction invItem : workOrder.getTransactions()){
+             PaymentsData itData = new PaymentsData();
+
+             itData.setAmount(invItem.getAmount());
+             itData.setComments(invItem.getComments());
+             itData.setPaymentDate(invItem.getTransDate());
+
+             list.add(itData);
+             
+             dat.setTotPaidAmt(dat.getTotPaidAmt() + itData.getAmount());
+         }
+       }              
+        
+        return list;
+
+    }
+
 }

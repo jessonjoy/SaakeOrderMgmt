@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="saakeWorkOrder" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="39ce7a27-2886-4840-bc20-7026ee5d9c3f">
 	<property name="ireport.zoom" value="1.4641000000000006"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.y" value="433"/>
 	<style name="table">
 		<box>
 			<pen lineWidth="1.0" lineColor="#000000"/>
@@ -77,6 +77,13 @@
 		<field name="description" class="java.lang.String"/>
 		<field name="quantity" class="java.lang.Integer"/>
 	</subDataset>
+	<subDataset name="Table Dataset 2" uuid="25644bcc-d089-4f3a-86c7-d5e2e4844512">
+		<field name="amount" class="java.lang.Double"/>
+		<field name="paymentDate" class="java.lang.String">
+			<fieldDescription><![CDATA[paymentDate]]></fieldDescription>
+		</field>
+		<field name="comments" class="java.lang.String"/>
+	</subDataset>
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
@@ -148,6 +155,9 @@
 	</field>
 	<field name="assignee" class="java.lang.String">
 		<fieldDescription><![CDATA[assignee]]></fieldDescription>
+	</field>
+	<field name="payments" class="java.util.List">
+		<fieldDescription><![CDATA[payments]]></fieldDescription>
 	</field>
 	<background>
 		<band splitType="Stretch"/>
@@ -432,9 +442,7 @@
 				</jr:table>
 			</componentElement>
 		</band>
-	</detail>
-	<summary>
-		<band height="88" splitType="Stretch">
+		<band height="50">
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement stretchType="RelativeToBandHeight" x="438" y="0" width="102" height="23" isPrintWhenDetailOverflows="true" uuid="9d8bb4bb-fe2d-49ec-9bdf-276f7a0328bd"/>
 				<textElement verticalAlignment="Middle">
@@ -449,6 +457,74 @@
 				</textElement>
 				<text><![CDATA[Total]]></text>
 			</staticText>
+		</band>
+		<band height="64">
+			<componentElement>
+				<reportElement key="table 2" style="table 2" stretchType="RelativeToBandHeight" x="0" y="0" width="555" height="60" isPrintWhenDetailOverflows="true" uuid="31b5eac4-ba1d-4158-82d9-cc59360099c6"/>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="Table Dataset 2" uuid="313f6904-79f7-46d9-a2e7-c4a54ddc4517">
+						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{payments})]]></dataSourceExpression>
+					</datasetRun>
+					<jr:column width="268" uuid="1d928405-fc21-4373-abb2-ce765f7baa10">
+						<jr:columnHeader style="table 2_CH" height="32" rowSpan="1">
+							<staticText>
+								<reportElement x="5" y="0" width="263" height="32" uuid="51e4cf7a-e4c5-46a3-86a0-9bcc8dbd16e0"/>
+								<text><![CDATA[Amount]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="table 2_TD" height="30" rowSpan="1">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement stretchType="RelativeToBandHeight" x="5" y="1" width="263" height="24" uuid="b43121be-a3b4-4a45-a163-8d4276d88812"/>
+								<textElement verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$F{amount}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="90" uuid="59466004-f4ed-472f-80a1-3d5864231dbb">
+						<jr:columnHeader style="table 2_CH" height="32" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="90" height="32" uuid="cacdeb3f-e7fe-4771-a0d3-88c52164ca04"/>
+								<textElement textAlignment="Left" verticalAlignment="Middle">
+									<font size="11"/>
+									<paragraph leftIndent="5"/>
+								</textElement>
+								<text><![CDATA[Date]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="table 2_TD" height="30" rowSpan="1">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement x="0" y="1" width="90" height="23" uuid="f2492a3b-f5d6-433c-b58f-0b149c2ccc90"/>
+								<textElement textAlignment="Left" verticalAlignment="Middle">
+									<paragraph leftIndent="5"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{paymentDate}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="197" uuid="6fc7ab2d-6308-428f-8608-0b3dd481096d">
+						<jr:columnHeader style="table 2_CH" height="32" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="90" height="32" uuid="2b183058-d566-42a1-9144-588ec5d7a595"/>
+								<textElement textAlignment="Left" verticalAlignment="Middle">
+									<font size="11"/>
+								</textElement>
+								<text><![CDATA[Comments]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="table 2_TD" height="30" rowSpan="1">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="197" height="23" isPrintWhenDetailOverflows="true" uuid="193038d4-3e4c-46c5-a538-ac7620189e5d"/>
+								<textElement textAlignment="Left" verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$F{comments}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+		</band>
+	</detail>
+	<summary>
+		<band height="88" splitType="Stretch">
 			<textField pattern="dd/MM/yyyy">
 				<reportElement x="2" y="68" width="100" height="20" uuid="2e0e4c1f-3ad5-430b-a2fa-0046d7eb38e9"/>
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>

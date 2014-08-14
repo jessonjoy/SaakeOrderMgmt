@@ -16,46 +16,37 @@
             </script>
         </ui:define>
         <ui:define name="title">
-            <h:outputText value="List Estimates"></h:outputText>
+            <h:outputText value="List WorkOrders"></h:outputText>
         </ui:define>
         <ui:define name="content">
-            <h:form>
+            <h:form >
                 <ui:include src="/template/messages.xhtml"/>
-                                
+
                 <p:hotkey bind="alt+n" action="create.jsf?faces-redirect=true" /> 
-               
+
                 <p:toolbar styleClass="noBorder invoiceListToolbar noBottomBorderRadius">
                     <p:toolbarGroup align="left">  
                         <p:commandButton value="New Work Order" icon="ui-icon-pencil" styleClass="newEstimateBtn"
                                          action="create.jsf?faces-redirect=true" />                          
                     </p:toolbarGroup>                                       
-                     <p:toolbarGroup align="right" style="margin-right: 10px">                                           
-                        <p:commandButton type="button" value="Filter" icon="ui-icon-search" onclick="searchPanel.toggle();advSearchPanel.collapse();" /> 
+                    <p:toolbarGroup align="right" style="margin-right: 10px">                                           
+                        <p:commandButton type="button" value="Filter" icon="ui-icon-search" onclick="searchPanel.toggle();
+                                advSearchPanel.collapse();" /> 
                         <p:separator/>
                         <p:spacer/> 
                     </p:toolbarGroup>
                 </p:toolbar>
-                
-                <p:panel rendered="false" id="searchPanel" widgetVar="searchPanel" toggleable="true" collapsed="true" styleClass="noBorder noTopBorderRadius noBottomBorderRadius label6"  
-                         style="background: url('') #5c9ccc; overflow: hidden; ">
+
+                <p:panel id="searchPanel" widgetVar="searchPanel" toggleable="true" collapsed="true" styleClass="searchClass noBorder noTopBorderRadius noBottomBorderRadius label6"  
+                         >
                     <p:separator/>
-                    
-                    <h:panelGrid columns="7" width="100%" columnClasses="label6 vAlign textAlignRight,,label6 vAlign textAlignRight,,label6 vAlign textAlignRight,,label6">  
-                        <h:outputText value="Period"  /> 
-                        <p:selectOneMenu value="#{workOrderCtrl.filterCriteria.invoicePeriod}" style="width:111px" 
-                                         valueChangeListener="#{workOrderCtrl.filterList}" >
-                            <f:selectItem itemLabel="All" itemValue=""/>
-                            <f:selectItem itemLabel="Today" itemValue="today"/>
-                            <f:selectItem itemLabel="Yesterday" itemValue="yest"/>
-                            <f:selectItem itemLabel="This Month" itemValue="thisMon"/>
-                            <f:selectItem itemLabel="Last Month" itemValue="lastMon"/>
-                            <f:selectItem itemLabel="This Year" itemValue="thisYr"/>
-                            <f:selectItem itemLabel="Last Year" itemValue="lastYr"/>
-                        </p:selectOneMenu>
+
+                    <h:panelGrid columns="6" width="100%" columnClasses="label2 vAlign textAlignRight,,label2 vAlign textAlignRight,,label2 vAlign textAlignRight,,">  
+
                         <h:outputText value="Customer" /> 
-                        <p:autoComplete id="custSugg" rendered="false" value="#{workOrderCtrl.filterCriteria.customer}" 
+                        <p:autoComplete id="custSugg"  value="#{workOrderCtrl.filterCriteria.customer}" 
                                         completeMethod="#{customerController.suggestCustomer}"  
-                                        var="cust" itemLabel="#{cust.firstName}" itemValue="#{cust}" dropdown="true" >  
+                                        var="cust" itemLabel="#{cust.firstName}" itemValue="#{cust}" dropdown="true" size="35" scrollHeight="500" >  
                             <p:ajax event="change" listener="#{workOrderCtrl.filterList}" process="@form" update="estimateListTable"/>
 
                             <p:column>  
@@ -76,45 +67,79 @@
                                 </f:facet>
                                 <h:outputText value="#{cust.lastName}"/> 
                             </p:column>  
-                            
+
+                        </p:autoComplete>
+                        <h:outputText value="VIN" />
+                        <h:inputText value="#{workOrderCtrl.filterCriteria.vin}" />
+                        
+                        <h:outputLabel value="Assigned User:" />
+                        <p:autoComplete id="userSugg" value="#{workOrderCtrl.filterCriteria.assignedUser}" completeMethod="#{userCtrl.suggestUser}"  
+                                        var="user"  dropdown="true" itemLabel="#{user.firstLastName}" itemValue="#{user}" size="20" 
+                                        queryDelay="2">                                        
+                            <p:column>  
+                                <f:facet name="header">
+                                    <h:outputText value="Name" styleClass="bold"/>
+                                </f:facet>
+                                <h:outputText value="#{user.firstLastName}"/> 
+                            </p:column>              
                         </p:autoComplete>
                         <h:outputText value="Status" />
-                        <p:selectOneButton rendered="false" value="#{workOrderCtrl.filterCriteria.status}" 
-                                           valueChangeListener="#{workOrderCtrl.filterList}">
-                            <f:selectItem itemLabel="All" itemValue="" /> 
-                            <f:selectItem itemLabel="Due" itemValue="pend" /> 
-                            <f:selectItem itemLabel="Draft" itemValue="draft" /> 
-                        </p:selectOneButton>
+                        <h:selectOneMenu  value="#{workOrderCtrl.filterCriteria.status}" label="Status" >
+                            <f:selectItems value="#{listCtrl.woStatusSI}"  />
+                        </h:selectOneMenu>
+
                         <h:panelGroup>
-                        <p:commandButton type="link" value="Reset" icon="ui-icon-arrowrefresh-1-w" actionListener="#{workOrderCtrl.resetSearch}"
-                                         update="@form" alt="Reset" style="margin-right: 5px" /> 
-                        <p:commandLink type="button" value="Filter More.." onclick="advSearchPanel.toggle();" style="font-weight: 10px" />
+
+                            <p:commandLink rendered="false" type="button" value="Filter More.." onclick="advSearchPanel.toggle();" style="font-weight: 10px" />
 
                         </h:panelGroup>
                     </h:panelGrid>
+                    <h:panelGroup styleClass="floatRight">
+                        
+                        <p:commandButton type="link" value="Search" icon="ui-icon-search" actionListener="#{workOrderCtrl.filterList}"
+                                         update="@form" process="@form" alt="Search" />
+                    
+                        <p:spacer width="20px"/>
+                        <p:commandLink type="link" value="Reset" action="#{workOrderCtrl.resetSearch}"
+                                       update="@form" process="@form" >
+                           
+                        </p:commandLink>
+                        
+                    </h:panelGroup>
+                    
                 </p:panel> 
-                <p:panel rendered="false" id="advSearchPanel" widgetVar="advSearchPanel" toggleable="true" collapsed="true" styleClass="noBorder noTopBorderRadius label6"  
+                <p:panel id="advSearchPanel" widgetVar="advSearchPanel" toggleable="true" collapsed="true" styleClass="noBorder noTopBorderRadius label6"  
                          style="background: url('') #5c9ccc; overflow: hidden ">
 
                     <h:panelGrid columns="7" width="100%" columnClasses="label6 vAlign textAlignRight,,label6 vAlign textAlignRight,,label6 vAlign textAlignRight,,label6">  
-                    
+                        <!--<h:outputText value="Period"  />--> 
+                        <p:selectOneMenu rendered="false" value="#{workOrderCtrl.filterCriteria.invoicePeriod}" style="width:111px" 
+                                         valueChangeListener="#{workOrderCtrl.filterList}" >
+                            <f:selectItem itemLabel="All" itemValue=""/>
+                            <f:selectItem itemLabel="Today" itemValue="today"/>
+                            <f:selectItem itemLabel="Yesterday" itemValue="yest"/>
+                            <f:selectItem itemLabel="This Month" itemValue="thisMon"/>
+                            <f:selectItem itemLabel="Last Month" itemValue="lastMon"/>
+                            <f:selectItem itemLabel="This Year" itemValue="thisYr"/>
+                            <f:selectItem itemLabel="Last Year" itemValue="lastYr"/>
+                        </p:selectOneMenu>
                         <h:outputText value="Date Range" styleClass="label6" style="margin-right: 5px"/>
                         <h:panelGroup>
-                        <p:calendar value="#{workOrderCtrl.filterCriteria.fromDate}" size="8"/>
-                        <h:outputText value=" to "/> 
-                        <p:calendar value="#{workOrderCtrl.filterCriteria.toDate}" size="8"/>
+                            <p:calendar value="#{workOrderCtrl.filterCriteria.fromDate}" size="8"/>
+                            <h:outputText value=" to "/> 
+                            <p:calendar value="#{workOrderCtrl.filterCriteria.toDate}" size="8"/>
                         </h:panelGroup>
-                        
+
                         <h:outputText value="Amount from"/>
                         <h:panelGroup>
-                        <p:spinner value="#{workOrderCtrl.filterCriteria.fromAmount}" size="5" min="1" maxlength="5" />
-                        <h:outputText value=" to "/>
-                        <p:spinner value="#{workOrderCtrl.filterCriteria.toAmount}" size="5" min="1" maxlength="5" />
+                            <p:spinner value="#{workOrderCtrl.filterCriteria.fromAmount}" size="5" min="1" maxlength="5" />
+                            <h:outputText value=" to "/>
+                            <p:spinner value="#{workOrderCtrl.filterCriteria.toAmount}" size="5" min="1" maxlength="5" />
                         </h:panelGroup>
                         <p:spacer width="10px"/>
                         <p:commandButton type="link" value="Search" actionListener="#{workOrderCtrl.filterList}"
                                          update="estimateListTable" alt="Search" />      
-                                                <p:spacer width="10px"/>
+                        <p:spacer width="10px"/>
 
                     </h:panelGrid>
                 </p:panel>
@@ -122,7 +147,7 @@
                 <p:spacer height="10"/>
                 <p:dataTable id="estimateListTable" value="#{workOrderCtrl.model}" var="workOrder" rowKey="#{workOrder.workOrderId}"
                              styleClass="estimateItemClass invoiceItemClass viewInvoiceItems font16 invoiceList" selection="#{workOrderCtrl.current}" selectionMode="single"
-                             paginator="true" rows="10" paginatorAlwaysVisible="true" paginatorPosition="bottom" style="overflow: auto;width:870px"  
+                             paginator="true" rows="10" paginatorAlwaysVisible="true" paginatorPosition="bottom" style="overflow: auto;"  
                              paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
                              rowsPerPageTemplate="5,10,15,25,50,100" filteredValue="#{workOrderCtrl.workOrderList}" widgetVar="invoiceTable"  >  
                     <!--                    <f:facet name="header">  
@@ -177,7 +202,8 @@
                             <h:outputText value="&nbsp;"/>
                         </f:facet>
 
-                        <p:commandLink action="#{workOrderCtrl.delete}" styleClass="editInvoice" onclick="if(!confirm('Are you sure you want to delete ?')) return false;"
+                        <p:commandLink action="#{workOrderCtrl.delete}" styleClass="editInvoice" onclick="if (!confirm('Are you sure you want to delete ?'))
+                                    return false;"
                                        update="estimateListTable">
                             <h:graphicImage url="/resources/images/black_delete.png" width="12" height="12" alt="Delete" styleClass="editInvoice"/>
                             <f:setPropertyActionListener target="#{workOrderCtrl.current}" value="#{workOrder}"/>
@@ -189,14 +215,14 @@
                     <p:ajax event="rowDblselect" listener="#{workOrderCtrl.redirectToView(estimate.workOrderId)}">
                     </p:ajax>
                 </p:dataTable>
-                
+
                 <p:contextMenu for="estimateListTable">  
                     <p:menuitem value="View" action="#{workOrderCtrl.redirectToView(null)}" includeViewParams="true" 
                                 style="background: url('../resources/images/estimate.png') no-repeat; background-size: 16px 16px; padding-left: 20px; "/>
                     <p:menuitem value="Edit" action="#{workOrderCtrl.prepareEdit}" includeViewParams="true" 
                                 style="background: url('../resources/images/edit-black-2.png') no-repeat ;background-size: 16px 16px; padding-left: 20px; "/>
                 </p:contextMenu> 
-                
+
             </h:form>
         </ui:define>
     </ui:composition>

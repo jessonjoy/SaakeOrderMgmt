@@ -3,6 +3,8 @@ package com.saake.invoicer.controller;
 import com.saake.invoicer.entity.Customer;
 import com.saake.invoicer.controller.masterdata.util.JsfUtil;
 import com.saake.invoicer.entity.Vehicle;
+import com.saake.invoicer.entity.WorkOrder;
+import com.saake.invoicer.model.SearchInvoiceVO;
 import com.saake.invoicer.sessionbean.CustomerFacade;
 import com.saake.invoicer.util.Utils;
 import java.io.Serializable;
@@ -26,6 +28,7 @@ public class CustomerController implements Serializable {
 
     private Customer current;
     private List<Customer> items = null;
+    private List<Customer> originalCustList = null;
     List<Customer> suggestCustomerList = new ArrayList<>();
     
     @EJB
@@ -33,6 +36,8 @@ public class CustomerController implements Serializable {
 
     private int selectedItemIndex;
     private int rowKeyVar;
+    
+     private SearchInvoiceVO filterCriteria = new SearchInvoiceVO();
 
     @PostConstruct
     private void initialize() {
@@ -229,6 +234,8 @@ public class CustomerController implements Serializable {
     public List<Customer> getItems() {        
         if(items == null){
             items = ejbFacade.findAll();
+            
+            originalCustList = new ArrayList<>(items);
         }
         return items;
     }
@@ -308,4 +315,45 @@ public class CustomerController implements Serializable {
             }            
         }
     }
+    
+    
+    public void filterList() {
+        if (!filterCriteria.empty()) {
+            items.clear();
+
+            for (Customer inv : originalCustList) {
+                if (filterCriteria.getCustomer() != null ) {
+                    if (inv.getCustomerId() != null && filterCriteria.getCustomer().getCustomerId() != null
+                            && inv.getCustomerId().equals(filterCriteria.getCustomer().getCustomerId())) {
+                        items.add(inv);
+                    }
+                }  else if (Utils.notBlank(filterCriteria.getVin())) {
+                    if (Utils.notEmpty(inv.getCustomerVehicles())){
+                        for(Vehicle veh : inv.getCustomerVehicles()){                            
+                            if(Utils.notBlank(veh.getVin())&& veh.getVin().equals(filterCriteria.getVin())) {
+                                items.add(inv);
+                                break;
+                            }
+                        }
+                    }                            
+                } 
+            }
+        }
+    }
+
+    public void resetSearch() {
+        items.clear();
+        items.addAll(originalCustList);
+        filterCriteria = new SearchInvoiceVO();
+        //recreateModel();
+    }
+
+    public SearchInvoiceVO getFilterCriteria() {
+        return filterCriteria;
+    }
+
+    public void setFilterCriteria(SearchInvoiceVO filterCriteria) {
+        this.filterCriteria = filterCriteria;
+    }
+        
 }

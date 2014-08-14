@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <ui:composition>
+        <h:panelGroup id="customerPanelGroup" layout="block" class="noBorder borderRound10 viewInfo" >
+            <h:panelGrid >
+                <h:panelGroup style="height: 250px">
+                    <p:outputLabel value="Customer Info" for="custSugg" styleClass="label1"/>
+                    <p:commandButton id="changeCusBtn" image="change-cust-image"  ajax="true"  rendered="#{not empty poCtrl.current.customerId}"
+                                     style="font-size: 9px!important;margin-left: 10px; background:url('../resources/images/edit_pen-20.png') no-repeat; background-size: 16px 16px" title="Change"
+                                     actionListener="#{poCtrl.changeCustomer}" update="customerPanelGroup" >
+                    </p:commandButton>
+                    <p:commandButton id="addCusBtn" image="add-cust-image" onclick="addCusPopup.show()" ajax="true" rendered="#{empty poCtrl.current.customerId}"
+                                     style="font-size: 9px!important;margin-left: 10px; background:url('../resources/images/person_add-20.png') no-repeat" title="Add"
+                                     update="customerPanelGroup"/>
+                </h:panelGroup>
+                <h:panelGroup rendered="#{empty poCtrl.current.customerId}">
+                    <p:autoComplete id="custSugg" value="#{poCtrl.current.customerId}" 
+                                    completeMethod="#{customerController.suggestCustomer}"  
+                                    var="cust" itemLabel="#{cust.firstName}" dropdown="true" itemValue="#{cust}" size="50" 
+                                    scrollHeight="500"
+                                    queryDelay="2" >                                        
+                        <p:column>  
+                            <f:facet name="header">
+                                <h:outputText value="Customer Name" styleClass="bold"/>
+                            </f:facet>
+                            <h:outputText value="#{cust.firstName} #{cust.lastName}"/> 
+                        </p:column> 
+                        <p:column>  
+                            <f:facet name="header">
+                                <h:outputText value="Company Name" styleClass="bold"/>
+                            </f:facet>
+                            <h:outputText value="#{cust.companyName}"/> 
+                        </p:column>
+                        <p:column>  
+                            <f:facet name="header">
+                                <h:outputText value="Address" styleClass="bold"/>
+                            </f:facet>
+                            <h:outputText value="#{cust.addressLine1}"/> 
+                            <br/>
+                            <h:outputText value="#{cust.city}"/> 
+                            <h:outputText value=", " rendered="#{not empty cust.country}"/> 
+                            <h:outputText value="#{cust.country}"/> 
+                            <br/>
+                            <h:outputText value="#{cust.mobileNum}"/> 
+                        </p:column>  
+                        <f:ajax event="itemSelect" render="customerPanelGroup"/>
+                    </p:autoComplete>                                                                                      
+                </h:panelGroup>
+                <h:panelGrid columns="4" width="100%" rendered="#{not empty poCtrl.current.customerId}" 
+                             cellpadding="5" cellspacing="10"
+                             columnClasses="viewCustLbl noBorder padRight50 padRight50,viewCustVal noBorder padRight50, viewCustLbl noBorder padRight50 padRight50,viewCustVal noBorder padRight50  " 
+                             >
+                    <h:outputLabel value="First Name:" />
+                    <h:outputText value="#{poCtrl.current.customerId.firstName}" />
+                    <h:outputLabel value="Last Name:"  />
+                    <h:outputText value="#{poCtrl.current.customerId.lastName}" />
+                    <h:outputLabel value="Mobile #:" />
+                    <h:outputText value="#{poCtrl.current.customerId.mobileNum}" />
+                    <p:spacer/>
+                    <p:spacer/>
+                    <h:outputLabel value="Company Name:" />
+                    <h:outputText value="#{poCtrl.current.customerId.companyName}" />
+                    <p:spacer/>
+                    <p:spacer/>
+                    <h:outputLabel value="Address:" />
+                    <h:panelGroup>
+                        <h:outputText value="#{poCtrl.current.customerId.addressLine1}" />
+                        <h:outputText value="#{poCtrl.current.customerId.city}" />
+                        <h:outputText value=", " rendered="#{not empty poCtrl.current.customerId.country}"/>
+                        <h:outputText value="#{poCtrl.current.customerId.country}" />
+                    </h:panelGroup>
+
+                </h:panelGrid>
+
+            </h:panelGrid>
+           
+        </h:panelGroup>
+    </ui:composition>
+</html>

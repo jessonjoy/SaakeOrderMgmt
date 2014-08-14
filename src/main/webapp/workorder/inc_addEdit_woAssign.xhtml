@@ -33,8 +33,12 @@ and open the template in the editor.
                 </p:autoComplete> 
                 <p:outputLabel value="Notes" for="workOrderNotes" styleClass="label1"/>
 
-                <p:inputTextarea id="workOrderNotes" value="#{workOrderCtrl.current.notes}" cols="98" rows="4" style="font-size: 14px" />
+                <p:inputTextarea id="workOrderNotes" value="#{workOrderCtrl.currentNotes.notes}" cols="98" rows="4" style="font-size: 14px" />
+                <br/>
+                <br/>
+                
             </h:panelGrid>
+            <p:commandButton value="Create" action="#{workOrderCtrl.save}" style="float: right" />
         </h:panelGroup>
     </ui:composition>
 </html>

@@ -22,6 +22,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -30,40 +31,44 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author jn
  */
 @Entity
-@Table(name = "work_order_notes")
+@Table(name = "purchase_order_notes")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "WorkOrderNotes.findAll", query = "SELECT w FROM WorkOrderNotes w"),
-    @NamedQuery(name = "WorkOrderNotes.findByNotesId", query = "SELECT w FROM WorkOrderNotes w WHERE w.notesId = :notesId"),
-    @NamedQuery(name = "WorkOrderNotes.findByNotes", query = "SELECT w FROM WorkOrderNotes w WHERE w.notes = :notes"),
-    @NamedQuery(name = "WorkOrderNotes.findByCreatedBy", query = "SELECT w FROM WorkOrderNotes w WHERE w.createdBy = :createdBy"),
-    @NamedQuery(name = "WorkOrderNotes.findByCreatedOn", query = "SELECT w FROM WorkOrderNotes w WHERE w.createdOn = :createdOn")})
-public class WorkOrderNotes implements Serializable {
+    @NamedQuery(name = "PurchaseOrderNotes.findAll", query = "SELECT p FROM PurchaseOrderNotes p"),
+    @NamedQuery(name = "PurchaseOrderNotes.findByNotesId", query = "SELECT p FROM PurchaseOrderNotes p WHERE p.notesId = :notesId"),
+    @NamedQuery(name = "PurchaseOrderNotes.findByPurchaseOrderId", query = "SELECT p FROM PurchaseOrderNotes p WHERE p.purchaseOrderId = :purchaseOrderId"),
+    @NamedQuery(name = "PurchaseOrderNotes.findByNotes", query = "SELECT p FROM PurchaseOrderNotes p WHERE p.notes = :notes"),
+    @NamedQuery(name = "PurchaseOrderNotes.findByCreatedBy", query = "SELECT p FROM PurchaseOrderNotes p WHERE p.createdBy = :createdBy"),
+    @NamedQuery(name = "PurchaseOrderNotes.findByCreatedOn", query = "SELECT p FROM PurchaseOrderNotes p WHERE p.createdOn = :createdOn")})
+public class PurchaseOrderNotes implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
+    
     @Column(name = "notes_id")
     private Integer notesId;
-    @Size(max = 200)
+    
+    @JoinColumn(name = "PURCHASE_ORDER_ID", referencedColumnName = "PURCHASE_ORDER_ID")
+    @ManyToOne
+    private PurchaseOrder purchaseOrderId;
     @Column(name = "notes")
     private String notes;
-    @Size(max = 20)
     @Column(name = "created_by")
     private String createdBy;
     @Column(name = "created_on")
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdOn;
-        
-    @JoinColumn(name = "WORK_ORDER_ID", referencedColumnName = "WORK_ORDER_ID")
-    @ManyToOne
-    private WorkOrder workOrderId;
 
-    public WorkOrderNotes() {
+    public PurchaseOrderNotes() {
     }
 
-    public WorkOrderNotes(Integer notesId) {
+    public PurchaseOrderNotes(Integer notesId) {
         this.notesId = notesId;
+    }
+
+    public PurchaseOrderNotes(Integer notesId, PurchaseOrder purchaseOrderId) {
+        this.notesId = notesId;
+        this.purchaseOrderId = purchaseOrderId;
     }
 
     public Integer getNotesId() {
@@ -72,6 +77,14 @@ public class WorkOrderNotes implements Serializable {
 
     public void setNotesId(Integer notesId) {
         this.notesId = notesId;
+    }
+
+    public PurchaseOrder getPurchaseOrderId() {
+        return purchaseOrderId;
+    }
+
+    public void setPurchaseOrderId(PurchaseOrder purchaseOrderId) {
+        this.purchaseOrderId = purchaseOrderId;
     }
 
     public String getNotes() {
@@ -98,14 +111,6 @@ public class WorkOrderNotes implements Serializable {
         this.createdOn = createdOn;
     }
 
-    public WorkOrder getWorkOrderId() {
-        return workOrderId;
-    }
-
-    public void setWorkOrderId(WorkOrder workOrderId) {
-        this.workOrderId = workOrderId;
-    }       
-
     @Override
     public int hashCode() {
         int hash = 0;
@@ -116,10 +121,10 @@ public class WorkOrderNotes implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof WorkOrderNotes)) {
+        if (!(object instanceof PurchaseOrderNotes)) {
             return false;
         }
-        WorkOrderNotes other = (WorkOrderNotes) object;
+        PurchaseOrderNotes other = (PurchaseOrderNotes) object;
         if ((this.notesId == null && other.notesId != null) || (this.notesId != null && !this.notesId.equals(other.notesId))) {
             return false;
         }
@@ -128,10 +133,12 @@ public class WorkOrderNotes implements Serializable {
 
     @Override
     public String toString() {
-        return "com.saake.invoicer.entity.WorkOrderNotes[ notesId=" + notesId + " ]";
+        return "com.saake.invoicer.entity.PurchaseOrderNotes[ notesId=" + notesId + " ]";
     }
-
+    
+    
     public boolean isEmpty() {
         return Utils.isBlank(this.notes );
-    }    
+    }  
+    
 }

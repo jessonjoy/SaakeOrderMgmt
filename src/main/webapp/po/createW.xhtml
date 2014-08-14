@@ -11,21 +11,21 @@
     <ui:composition template="/template/template.xhtml">    
         <ui:define name="content"> 
             <h:form prependId="false"> 
-                <ui:param name="source" value="createWorkOrder"/>
+                <ui:param name="source" value="createPurchaseOrder"/>
                 <ui:include src="/template/messages.xhtml">
                     <ui:param name="source" value="#{source}"/>
                 </ui:include>
-                <h:panelGroup id="sideBarPG" layout="block" styleClass="right-tab" rendered="#{not empty workOrderCtrl.current.customerId}">
-                    <h:commandLink action="#{workOrderCtrl.save}" styleClass="sidebar-right-round" style="margin-top:50px;margin-right:-50px;">                    
+                <h:panelGroup id="sideBarPG" layout="block" styleClass="right-tab" rendered="#{not empty poCtrl.current.customerId}">
+                    <h:commandLink action="#{poCtrl.save}" styleClass="sidebar-right-round" style="margin-top:50px;margin-right:-50px;">                    
                         <h:graphicImage id="save-img1" styleClass="save-img"  url="/resources/images/check_black.png" alt="Save" />
-                        <p:tooltip for="save-img1" value="Save WorkOrder" />
+                        <p:tooltip for="save-img1" value="Save Purchase Order" />
                     </h:commandLink>
                     <h:commandLink action="list.jsf?faces-redirect=true" styleClass="sidebar-right-round" style="margin-top:125px;margin-right:-50px;">
                         <h:graphicImage id="cancel-img" class="cancel-img" url="/resources/images/cancel_black.png" alt="Cancel"/>
-                        <p:tooltip for="cancel-img" value="Cancel Edit WorkOrder" />
+                        <p:tooltip for="cancel-img" value="Cancel Edit Purchase Order" />
                     </h:commandLink> 
                 </h:panelGroup>
-                <p:wizard flowListener="#{workOrderCtrl.onFlowProcess}" showNavBar="true" showStepStatus="true" style="width:100%" >
+                <p:wizard flowListener="#{poCtrl.onFlowProcess}" showNavBar="true" showStepStatus="true" style="width:100%" >
                     <p:tab id="woCustTab" title="Customer" titleStyle="background-color: #e3e2e2!important;" >
                         <ui:include src="inc_addEdit_custInfo.xhtml"/>                    
                     </p:tab>
@@ -40,14 +40,9 @@
                     
                     <p:tab id="woPmtTab" title="Payment" >
                         <ui:include src="inc_addEdit_woPayment.xhtml">
-                            <ui:param name="controller" value="#{workOrderCtrl}" />
+                            <ui:param name="controller" value="#{poCtrl}" />
                         </ui:include>                          
-                    </p:tab>
-                    
-                    <p:tab id="woAsgnTab" title="Assignment">
-                        <ui:include src="inc_addEdit_woAssign.xhtml"/> 
-                        
-                    </p:tab>                                        
+                    </p:tab>                                                      
                 </p:wizard>
             </h:form>     
         </ui:define>

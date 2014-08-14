@@ -5,6 +5,7 @@
 package com.saake.invoicer.model;
 
 import com.saake.invoicer.entity.Customer;
+import com.saake.invoicer.entity.User;
 import com.saake.invoicer.util.Utils;
 import java.io.Serializable;
 import java.util.Date;
@@ -22,7 +23,9 @@ public class SearchInvoiceVO implements Serializable{
     private String searchText;
     private String vin;
     private String invoicePeriod;
+    private String invoicedPaidAssigned;
     private Customer customer ;
+    private User assignedUser ;
     private Double fromAmount;
     private Double toAmount;
 
@@ -112,6 +115,22 @@ public class SearchInvoiceVO implements Serializable{
 
     public void setVin(String vin) {
         this.vin = vin;
+    }
+
+    public User getAssignedUser() {
+        return assignedUser;
+    }
+
+    public void setAssignedUser(User assignedUser) {
+        this.assignedUser = assignedUser;
+    }    
+
+    public String getInvoicedPaidAssigned() {
+        return invoicedPaidAssigned;
+    }
+
+    public void setInvoicedPaidAssigned(String invoicedPaidAssigned) {
+        this.invoicedPaidAssigned = invoicedPaidAssigned;
     }
     
     public boolean empty() {

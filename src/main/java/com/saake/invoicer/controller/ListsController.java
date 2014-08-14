@@ -9,7 +9,9 @@ package com.saake.invoicer.controller;
 import com.saake.invoicer.entity.User;
 import com.saake.invoicer.util.Constants;
 import com.saake.invoicer.util.JsfUtil;
+import com.saake.invoicer.util.WorkOrderStatusEnum;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
@@ -30,12 +32,14 @@ public class ListsController implements Serializable{
     
     private SelectItem[] monthsSI;
     private SelectItem[] vehYearsSI;
+    private SelectItem[] woStatusSI;
     private List<User> users;
     
     @PostConstruct
     public void init(){
         monthsSI = JsfUtil.getSelectItems(getMonths(), true);
         vehYearsSI = JsfUtil.getSelectItems(getVehYears(), true);
+        woStatusSI = JsfUtil.getSelectItems(getWorkOrderStatusList(), true);
         users = userCtrl.getItems();
     }
    
@@ -51,6 +55,15 @@ public class ListsController implements Serializable{
         return users;
     }
     
+    public List<String> getWorkOrderStatusList(){
+        List<String> list = new ArrayList<>();
+        for(WorkOrderStatusEnum stat : WorkOrderStatusEnum.values()){
+            list.add(stat.getValue());
+        }
+        
+        return list;
+    }
+    
     public SelectItem[] getMonthsSI(){
         return monthsSI;
     }
@@ -58,5 +71,12 @@ public class ListsController implements Serializable{
     public SelectItem[] getVehYearsListSI(){
         return vehYearsSI;
     }
-    
+
+    public SelectItem[] getWoStatusSI() {
+        return woStatusSI;
+    }
+
+    public void setWoStatusSI(SelectItem[] woStatusSI) {
+        this.woStatusSI = woStatusSI;
+    }
 }

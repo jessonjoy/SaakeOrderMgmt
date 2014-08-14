@@ -22,20 +22,14 @@ and open the template in the editor.
                     <f:selectItem itemLabel="No" itemValue="false"/>
                 </h:selectOneMenu>
                 
-                <h:outputLabel value="Show Unit Price" styleClass="bold" />
+                <h:outputLabel value="Show Unit Price" for="category" styleClass="bold" />
                 <h:selectOneMenu id="showUnitPrice" value="#{controller.viewOptions.showUnitPrice}" >
                     <f:selectItem itemLabel="Yes" itemValue="true"/>
                     <f:selectItem itemLabel="No" itemValue="false"/>
                 </h:selectOneMenu>
 
-                <h:outputLabel value="Show Total Amount" styleClass="bold" />
-                <h:selectOneMenu id="showTotalAmt" value="#{controller.viewOptions.showTotalAmount}" >
-                    <f:selectItem itemLabel="Yes" itemValue="true"/>
-                    <f:selectItem itemLabel="No" itemValue="false"/>
-                </h:selectOneMenu>
-
-                <h:outputLabel value="Show Payment History" styleClass="bold" />
-                <h:selectOneMenu value="#{controller.viewOptions.showPaymentHistory}" >
+                <h:outputLabel value="Show Total Amount" for="category" styleClass="bold" />
+                <h:selectOneMenu value="#{controller.viewOptions.showTotalAmount}" >
                     <f:selectItem itemLabel="Yes" itemValue="true"/>
                     <f:selectItem itemLabel="No" itemValue="false"/>
                 </h:selectOneMenu>

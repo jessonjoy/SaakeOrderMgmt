@@ -19,13 +19,65 @@
                     <p:toolbarGroup align="left">  
                         <p:button value="New Customer" icon="ui-icon-person" styleClass="newInvoiceBtn" outcome="create" />                          
                     </p:toolbarGroup>                                       
-                    <p:toolbarGroup align="right" style="margin-right: 10px" rendered="false">                                           
+                    
+                    <p:toolbarGroup align="right" style="margin-right: 10px">                                           
                         <p:commandButton type="button" value="Filter" icon="ui-icon-search" onclick="searchPanel.toggle();
                                 advSearchPanel.collapse();" /> 
                         <p:separator/>
                         <p:spacer/> 
                     </p:toolbarGroup>
+
                 </p:toolbar>
+                
+                <p:panel id="searchPanel" widgetVar="searchPanel" toggleable="true" collapsed="true" styleClass="searchClass noBorder noTopBorderRadius noBottomBorderRadius label6"  
+                         >
+                    <p:separator/>
+
+                    <h:panelGrid columns="6" width="100%" columnClasses="label2 vAlign textAlignRight,,label2 vAlign textAlignRight,,label2 vAlign textAlignRight,,">  
+
+                        <h:outputText value="Customer" /> 
+                        <p:autoComplete id="custSugg"  value="#{customerController.filterCriteria.customer}" 
+                                        completeMethod="#{customerController.suggestCustomer}"  
+                                        var="cust" itemLabel="#{cust.firstName}" itemValue="#{cust}" dropdown="true" size="35" scrollHeight="500" >  
+                            <p:ajax event="change" listener="#{customerController.filterList}" process="@form" update="customerTable"/>
+
+                            <p:column>  
+                                <f:facet name="header">
+                                    <h:outputText value="Company Name" styleClass="bold"/>
+                                </f:facet>
+                                <h:outputText value="#{cust.companyName}"/> 
+                            </p:column>  
+                            <p:column>  
+                                <f:facet name="header">
+                                    <h:outputText value="First Name" styleClass="bold"/>
+                                </f:facet>
+                                <h:outputText value="#{cust.firstName}"/> 
+                            </p:column>  
+                            <p:column>  
+                                <f:facet name="header">
+                                    <h:outputText value="Last Name" styleClass="bold"/>
+                                </f:facet>
+                                <h:outputText value="#{cust.lastName}"/> 
+                            </p:column>  
+
+                        </p:autoComplete>
+                        <h:outputText value="VIN" />
+                        <h:inputText value="#{customerController.filterCriteria.vin}" />                                               
+                    </h:panelGrid>
+                    <h:panelGroup styleClass="floatRight">
+                        
+                        <p:commandButton type="link" value="Search" icon="ui-icon-search" actionListener="#{customerController.filterList}"
+                                         update="@form" process="@form" alt="Search" />
+                    
+                        <p:spacer width="20px"/>
+                        <p:commandLink type="link" value="Reset" action="#{customerController.resetSearch}"
+                                       update="@form" process="@form" >
+                           
+                        </p:commandLink>
+                        
+                    </h:panelGroup>
+                    
+                </p:panel> 
                 <p:spacer height="10"/>
 
                 <p:dataTable id="customerTable" value="#{customerController.items}" var="cust" styleClass="invoiceList dataListStyle1 font16"

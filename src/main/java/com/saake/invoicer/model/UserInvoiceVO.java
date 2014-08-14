@@ -6,6 +6,7 @@ package com.saake.invoicer.model;
 
 import com.saake.invoicer.entity.Customer;
 import com.saake.invoicer.entity.User;
+import com.saake.invoicer.entity.WorkOrder;
 import com.saake.invoicer.util.Utils;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -22,8 +23,11 @@ public class UserInvoiceVO implements Serializable{
     private String year;    
     private String invoiceStatus;    
     private User user;    
-    private Double totLaborAmt;
-    private Double totAdjLaborAmt;
+    private Double totInvoiceAmt = 0.0;
+    private Double totLaborAmt = 0.0;
+    private Double totAdjLaborAmt = 0.0;
+    private Double incentiveAmount = 0.0;
+    private List<WorkOrder> woList;
 
     public String getMonth() {
         return month;
@@ -71,6 +75,30 @@ public class UserInvoiceVO implements Serializable{
 
     public void setTotAdjLaborAmt(Double totAdjLaborAmt) {
         this.totAdjLaborAmt = totAdjLaborAmt;
+    }
+
+    public List<WorkOrder> getWoList() {
+        return woList;
+    }
+
+    public void setWoList(List<WorkOrder> woList) {
+        this.woList = woList;
+    }
+
+    public Double getIncentiveAmount() {
+        return incentiveAmount;
+    }
+
+    public void setIncentiveAmount(Double incentiveAmount) {
+        this.incentiveAmount = incentiveAmount;
+    }
+
+    public Double getTotInvoiceAmt() {
+        return totInvoiceAmt;
+    }
+
+    public void setTotInvoiceAmt(Double totInvoiceAmt) {
+        this.totInvoiceAmt = totInvoiceAmt;
     }
    
     public boolean empty() {

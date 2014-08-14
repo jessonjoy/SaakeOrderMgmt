@@ -44,6 +44,7 @@ public class MenuController implements Serializable {
                     prependStr = viewIdArr[1];
                 }
                 menuItemFocus = prependStr + "Menu";
+                log.info("menuItemFocus : " + menuItemFocus);
             }
         }        
     }

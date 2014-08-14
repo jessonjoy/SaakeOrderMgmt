@@ -97,9 +97,9 @@
                     </table>                
                 </p:fieldset>  
                 <br/>
-                <p:fieldset legend="Invoices" toggleable="false" styleClass="noBackground">  
-                    <p:dataTable id="invoiceListTable" value="#{customerController.selected.invoices}" var="invoice" 
-                                 rowKey="#{invoice.invoiceId}" rowStyleClass="borderBottom"  rowIndexVar="rows"
+                <p:fieldset legend="WorkOrders" toggleable="false" styleClass="noBackground">  
+                    <p:dataTable id="invoiceListTable" value="#{customerController.selected.workOrders}" var="wo" 
+                                 rowKey="#{wo.workOrderId}" rowStyleClass="borderBottom"  rowIndexVar="rows"
                                  styleClass="viewInvoiceItems invoiceItemClass font16 "
                                  widgetVar="invoiceTable" >  
                         <p:column width="2%" >  
@@ -108,19 +108,19 @@
                             </f:facet>
                             <h:outputText value="#{rows + 1}." style="font-size: 10px; color: steelblue" />
                         </p:column>
-                        <p:column sortBy="#{invoice.invoiceId}" headerText="ID" filterBy="invoiceId">                              
-                            <h:outputText value="#{invoice.invoiceId}"/>
+                        <p:column sortBy="#{wo.workOrderId}" headerText="ID" filterBy="workOrderId">                              
+                            <h:outputText value="#{wo.workOrderId}"/>
                         </p:column>
-                        <p:column sortBy="#{invoice.invoiceNum}" headerText="Invoice #" filterBy="invoiceNum">                              
-                            <h:outputText value="#{invoice.invoiceNum}"/>
+                        <p:column sortBy="#{wo.workOrderNum}" headerText="Invoice #" filterBy="workOrderNum">                              
+                            <h:outputText value="#{wo.workOrderNum}"/>
                         </p:column>
-                        <p:column sortBy="#{item.invoiceDate}" headerText="Date" filterBy="invoiceDate">                              
-                            <h:outputText value="#{invoice.invoiceDate}">
+                        <p:column sortBy="#{wo.workOrderDate}" headerText="Date" filterBy="workOrderDate">                              
+                            <h:outputText value="#{wo.workOrderDate}">
                                 <f:convertDateTime type="date" pattern="dd-MM-YYY"/>
                             </h:outputText>
                         </p:column>                    
-                        <p:column sortBy="#{invoice.amount}" headerText="Amount" filterBy="amount">                              
-                            <h:outputText value="#{invoice.amount}">
+                        <p:column sortBy="#{wo.amount}" headerText="Amount" filterBy="amount">                              
+                            <h:outputText value="#{wo.amount}">
                                 <f:convertNumber type="currency" currencySymbol=" " />
                             </h:outputText>
                         </p:column>
@@ -131,13 +131,13 @@
                             <f:facet name="header">
                                 <h:outputText value="&nbsp;"/>
                             </f:facet>
-                            <h:link outcome="/invoice/view.jsf?faces-redirect=true" styleClass="editInvoice" includeViewParams="true">
-                                <f:param name="id" value="#{invoice.invoiceId}"/>
+                            <h:link outcome="/workorder/view.jsf?faces-redirect=true" styleClass="editInvoice" includeViewParams="true">
+                                <f:param name="id" value="#{wo.workOrderId}"/>
                                 View
                             </h:link>                        
                         </p:column>
                         <!--                    <f:facet name="footer">  
-                                                Total #{fn:length(customerController.selected.invoices)} invoices.
+                                                Total #{fn:length(customerController.selected.workOrders)} invoices.
                                             </f:facet>-->
                         <f:facet name="footer"> 
                             <table class="invoiceTableFooter" cellpadding="0" cellspacing="0" width="100%">

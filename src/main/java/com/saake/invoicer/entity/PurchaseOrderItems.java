@@ -1,13 +1,15 @@
 /*
- * To change this template, choose Tools | Templates
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
 package com.saake.invoicer.entity;
 
 import com.saake.invoicer.util.Utils;
 import java.io.Serializable;
 import java.util.Date;
-import java.util.Objects;
+import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -21,6 +23,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -28,53 +32,44 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author jn
  */
 @Entity
-@Table(name = "work_order_items")
+@Table(name = "purchase_order_items")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "WorkOrderItems.findAll", query = "SELECT w FROM WorkOrderItems w"),
-    @NamedQuery(name = "WorkOrderItems.findByWorkOrderItemsId", query = "SELECT w FROM WorkOrderItems w WHERE w.workOrderItemsId = :workOrderItemsId")})
-public class WorkOrderItems implements Serializable,Comparable {
+    @NamedQuery(name = "PurchaseOrderItems.findAll", query = "SELECT p FROM PurchaseOrderItems p"),
+    @NamedQuery(name = "PurchaseOrderItems.findByPurchaseOrderItemsId", query = "SELECT p FROM PurchaseOrderItems p WHERE p.purchaseOrderItemsId = :purchaseOrderItemsId"),
+    @NamedQuery(name = "PurchaseOrderItems.findByQuantity", query = "SELECT p FROM PurchaseOrderItems p WHERE p.quantity = :quantity"),
+    @NamedQuery(name = "PurchaseOrderItems.findByDescription", query = "SELECT p FROM PurchaseOrderItems p WHERE p.description = :description"),
+    @NamedQuery(name = "PurchaseOrderItems.findByUnitPrice", query = "SELECT p FROM PurchaseOrderItems p WHERE p.unitPrice = :unitPrice"),
+    @NamedQuery(name = "PurchaseOrderItems.findByDiscount", query = "SELECT p FROM PurchaseOrderItems p WHERE p.discount = :discount"),
+    @NamedQuery(name = "PurchaseOrderItems.findByAmount", query = "SELECT p FROM PurchaseOrderItems p WHERE p.amount = :amount"),
+    @NamedQuery(name = "PurchaseOrderItems.findByItemId", query = "SELECT p FROM PurchaseOrderItems p WHERE p.item = :item"),
+    @NamedQuery(name = "PurchaseOrderItems.findByCreateTs", query = "SELECT p FROM PurchaseOrderItems p WHERE p.createTs = :createTs"),
+    @NamedQuery(name = "PurchaseOrderItems.findByUpdateTs", query = "SELECT p FROM PurchaseOrderItems p WHERE p.updateTs = :updateTs"),
+    @NamedQuery(name = "PurchaseOrderItems.findByCreatedBy", query = "SELECT p FROM PurchaseOrderItems p WHERE p.createdBy = :createdBy"),
+    @NamedQuery(name = "PurchaseOrderItems.findByUpdatedBy", query = "SELECT p FROM PurchaseOrderItems p WHERE p.updatedBy = :updatedBy"),
+    @NamedQuery(name = "PurchaseOrderItems.findByDeleted", query = "SELECT p FROM PurchaseOrderItems p WHERE p.deleted = :deleted")})
+public class PurchaseOrderItems implements Serializable,Comparable {
     private static final long serialVersionUID = 1L;
-    
-    static WorkOrderItems copy(WorkOrderItems current, WorkOrderItems that) {
-        that.workOrderItemsId = current.workOrderItemsId;
-        that.quantity = current.quantity;
-        that.description = current.description;
-        that.unitPrice = current.unitPrice;
-        that.discount = current.discount;
-        that.amount = current.amount;
-        that.item = current.item;
-        that.createTs = current.createTs;
-        that.updateTs = current.updateTs;
-        that.createdBy = current.createdBy;
-        that.updatedBy = current.updatedBy;
-        that.workOrderId = current.workOrderId;
-        
-        return that;
-    }
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "WORK_ORDER_ITEMS_ID")
-    private Integer workOrderItemsId;
     
+    @Column(name = "PURCHASE_ORDER_ITEMS_ID")
+    private Integer purchaseOrderItemsId;
     @Column(name = "QUANTITY")
     private Integer quantity;
-    
     @Column(name = "DESCRIPTION")
     private String description;
-    
+    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "UNIT_PRICE")
     private Double unitPrice;
-    
     @Column(name = "DISCOUNT")
     private Double discount;
-    
     @Column(name = "AMOUNT")
     private Double amount;
-    
     @ManyToOne
     @JoinColumn(name = "ITEM_ID")
     private Item item;
+    
     
     @Column(name = "CREATE_TS")
     @Temporal(TemporalType.TIMESTAMP)
@@ -83,42 +78,38 @@ public class WorkOrderItems implements Serializable,Comparable {
     @Column(name = "UPDATE_TS")
     @Temporal(TemporalType.TIMESTAMP)
     private Date updateTs;
-    
     @Column(name = "CREATED_BY")
     private String createdBy;
-    
     @Column(name = "UPDATED_BY")
     private String updatedBy;
-
     @Column(name = "DELETED")
     private String deleted;
-    
-    @JoinColumn(name = "WORK_ORDER_ID", referencedColumnName = "WORK_ORDER_ID")
+    @JoinColumn(name = "PURCHASE_ORDER_ID", referencedColumnName = "PURCHASE_ORDER_ID")
     @ManyToOne
-    private WorkOrder workOrderId;
-
+    private PurchaseOrder purchaseOrderId;
+    
     @Transient
     private boolean addItem = false;
     
-    public WorkOrderItems() {
+    public PurchaseOrderItems() {
     }
 
-    public WorkOrderItems(Integer workOrderItemsId) {
-        this.workOrderItemsId = workOrderItemsId;
+    public PurchaseOrderItems(Integer purchaseOrderItemsId) {
+        this.purchaseOrderItemsId = purchaseOrderItemsId;
     }
 
-    public WorkOrderItems(Integer workOrderItemsId, Date createTs, Date updateTs) {
-        this.workOrderItemsId = workOrderItemsId;
+    public PurchaseOrderItems(Integer purchaseOrderItemsId, Date createTs, Date updateTs) {
+        this.purchaseOrderItemsId = purchaseOrderItemsId;
         this.createTs = createTs;
         this.updateTs = updateTs;
     }
 
-    public Integer getWorkOrderItemsId() {
-        return workOrderItemsId;
+    public Integer getPurchaseOrderItemsId() {
+        return purchaseOrderItemsId;
     }
 
-    public void setWorkOrderItemsId(Integer workOrderItemsId) {
-        this.workOrderItemsId = workOrderItemsId;
+    public void setPurchaseOrderItemsId(Integer purchaseOrderItemsId) {
+        this.purchaseOrderItemsId = purchaseOrderItemsId;
     }
 
     public Integer getQuantity() {
@@ -169,7 +160,6 @@ public class WorkOrderItems implements Serializable,Comparable {
         this.item = item;
     }
 
-
     public Date getCreateTs() {
         return createTs;
     }
@@ -202,69 +192,37 @@ public class WorkOrderItems implements Serializable,Comparable {
         this.updatedBy = updatedBy;
     }
 
-    public WorkOrder getWorkOrderId() {
-        return workOrderId;
-    }
-
-    public void setWorkOrderId(WorkOrder workOrderId) {
-        this.workOrderId = workOrderId;
-    }
-
     public String getDeleted() {
         return deleted;
     }
 
     public void setDeleted(String deleted) {
         this.deleted = deleted;
-    }  
-    
-   @Override
+    }
+
+    public PurchaseOrder getPurchaseOrderId() {
+        return purchaseOrderId;
+    }
+
+    public void setPurchaseOrderId(PurchaseOrder purchaseOrderId) {
+        this.purchaseOrderId = purchaseOrderId;
+    }
+
+    @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 83 * hash + Objects.hashCode(this.workOrderItemsId);
-        hash = 83 * hash + Objects.hashCode(this.quantity);
-        hash = 83 * hash + Objects.hashCode(this.description);
-        hash = 83 * hash + Objects.hashCode(this.unitPrice);
-        hash = 83 * hash + Objects.hashCode(this.discount);
-        hash = 83 * hash + Objects.hashCode(this.amount);
-        hash = 83 * hash + Objects.hashCode(this.workOrderId);
-        hash = 83 * hash + Objects.hashCode(this.deleted);
+        int hash = 0;
+        hash += (purchaseOrderItemsId != null ? purchaseOrderItemsId.hashCode() : 0);
         return hash;
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if(this == obj){
-            return true;
-        }
-        
-        if (obj == null || getClass() != obj.getClass()) {
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof PurchaseOrderItems)) {
             return false;
         }
-        
-        final WorkOrderItems other = (WorkOrderItems) obj;
-        if (!Objects.equals(this.workOrderItemsId, other.workOrderItemsId)) {
-            return false;
-        }
-        if (!Objects.equals(this.quantity, other.getQuantity())) {
-            return false;
-        }
-        if (!Objects.equals(this.description, other.getDescription())) {
-            return false;
-        }
-        if (!Objects.equals(this.unitPrice, other.getUnitPrice())) {
-            return false;
-        }
-        if (!Objects.equals(this.discount, other.getDiscount())) {
-            return false;
-        }
-        if (!Objects.equals(this.amount, other.getAmount())) {
-            return false;
-        }
-        if (!Objects.equals(this.workOrderId, other.workOrderId)) {
-            return false;
-        }
-        if (!Objects.equals(this.deleted, other.deleted)) {
+        PurchaseOrderItems other = (PurchaseOrderItems) object;
+        if ((this.purchaseOrderItemsId == null && other.purchaseOrderItemsId != null) || (this.purchaseOrderItemsId != null && !this.purchaseOrderItemsId.equals(other.purchaseOrderItemsId))) {
             return false;
         }
         return true;
@@ -272,10 +230,10 @@ public class WorkOrderItems implements Serializable,Comparable {
 
     @Override
     public String toString() {
-        return "com.saake.invoicer.entity.WorkOrderItems[ workOrderItemsId=" + workOrderItemsId + " ]";
-    }    
+        return "com.saake.invoicer.entity.PurchaseOrderItems[ purchaseOrderItemsId=" + purchaseOrderItemsId + " ]";
+    }
     
-     public boolean isEmptyForUse() {
+    public boolean isEmptyForUse() {
         return (amount == null || amount == 0.0)
                 //                && (discount == null || discount == 0.0) 
                 //                && invoiceItemId == null 
@@ -286,7 +244,7 @@ public class WorkOrderItems implements Serializable,Comparable {
     }
      
     public boolean isEmpty() {
-        return (amount == null || amount == 0.0) && workOrderItemsId == null && Utils.isBlank(description) && 
+        return (amount == null || amount == 0.0) && purchaseOrderItemsId == null && Utils.isBlank(description) && 
                 (quantity == null || quantity == 0)  && 
                  (unitPrice == null || unitPrice == 0.0);
     }
@@ -316,11 +274,11 @@ public class WorkOrderItems implements Serializable,Comparable {
     public int compareTo(Object o) {
         int val = 0;
 
-        if (o instanceof WorkOrderItems) {
-            WorkOrderItems that = (WorkOrderItems)o;
+        if (o instanceof PurchaseOrderItems) {
+            PurchaseOrderItems that = (PurchaseOrderItems)o;
             
-            if(this.workOrderItemsId != null && that.workOrderItemsId != null ){
-                val = that.workOrderItemsId.compareTo(workOrderItemsId);
+            if(this.purchaseOrderItemsId != null && that.purchaseOrderItemsId != null ){
+                val = that.purchaseOrderItemsId.compareTo(purchaseOrderItemsId);
             }
             else if(this.amount != null && that.amount != null ){
                 val = that.amount.compareTo(amount);
@@ -340,12 +298,28 @@ public class WorkOrderItems implements Serializable,Comparable {
             else if(this.unitPrice != null && that.unitPrice != null ){
                 val = that.unitPrice.compareTo(unitPrice);
             }
-            else if(this.workOrderId != null && this.workOrderId.getWorkOrderId()!= null && that.workOrderId != null && that.workOrderId.getWorkOrderId() != null){
-                val = that.workOrderId.getWorkOrderId().compareTo(workOrderId.getWorkOrderId());
+            else if(this.purchaseOrderId != null && this.purchaseOrderId.getPurchaseOrderId()!= null && that.purchaseOrderId != null && that.purchaseOrderId.getPurchaseOrderId() != null){
+                val = that.purchaseOrderId.getPurchaseOrderId().compareTo(purchaseOrderId.getPurchaseOrderId());
             }
         }
         
         return val;
     }
     
+    static PurchaseOrderItems copy(PurchaseOrderItems current, PurchaseOrderItems that) {
+        that.purchaseOrderItemsId = current.purchaseOrderItemsId;
+        that.quantity = current.quantity;
+        that.description = current.description;
+        that.unitPrice = current.unitPrice;
+        that.discount = current.discount;
+        that.amount = current.amount;
+        that.item = current.item;
+        that.createTs = current.createTs;
+        that.updateTs = current.updateTs;
+        that.createdBy = current.createdBy;
+        that.updatedBy = current.updatedBy;
+        that.purchaseOrderId = current.purchaseOrderId;
+        
+        return that;
+    }
 }

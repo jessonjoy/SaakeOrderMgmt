@@ -13,6 +13,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -505,6 +506,13 @@ public class WorkOrder implements Serializable {
                 status.equals(WorkOrderStatusEnum.COMPLETED.name())? "green": 
                 status.equals(WorkOrderStatusEnum.INVOICED.name())? "orange": 
                 status.equals(WorkOrderStatusEnum.ACCEPTED.name())? "limegreen": "blue":"";
+    }
+
+    public void addNote(WorkOrderNotes currentNotes) {
+        if(this.getNotes() == null){
+            this.setNotes(new HashSet<WorkOrderNotes>());
+        }
+        this.getNotes().add(currentNotes);
     }
     
 }

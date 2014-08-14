@@ -4,6 +4,8 @@
  */
 package com.saake.invoicer.controller;
 
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
 import com.saake.invoicer.model.ReportViewOptions;
 import com.saake.invoicer.entity.Customer;
 import com.saake.invoicer.entity.Vehicle;
@@ -14,7 +16,10 @@ import com.saake.invoicer.entity.WorkOrder;
 import com.saake.invoicer.entity.WorkOrderItems;
 import com.saake.invoicer.entity.Item;
 import com.saake.invoicer.entity.Transaction;
+import com.saake.invoicer.entity.User;
 import com.saake.invoicer.entity.WorkOrderNotes;
+import com.saake.invoicer.model.SearchInvoiceVO;
+import com.saake.invoicer.model.UserInvMonLbrTot;
 import com.saake.invoicer.model.UserInvoiceVO;
 import com.saake.invoicer.model.WorkOrderDataModel;
 import com.saake.invoicer.reports.ReportHelper;
@@ -56,7 +61,7 @@ public class WorkOrderController implements Serializable {
     private ReportViewOptions viewOptions;
     private UserInvoiceVO userInvoiceVO ;
     
-//    private SearchWorkOrderVO filterCriteria = new SearchWorkOrderVO();
+    private SearchInvoiceVO filterCriteria = new SearchInvoiceVO();
 //    private Orders invoiceOrder;
     private Transaction currentTransaction = new Transaction();
     private WorkOrderNotes currentNotes = new WorkOrderNotes();
@@ -186,6 +191,11 @@ public class WorkOrderController implements Serializable {
                         }
                     }
                     current.getWorkOrderItems().removeAll(emptyList);
+                }
+                
+                if(currentNotes != null && Utils.notBlank(currentNotes.getNotes())){
+                    currentNotes.setWorkOrderId(current);
+                    current.addNote(currentNotes);
                 }
 
                 if (current.getWorkOrderId() != null) {
@@ -404,29 +414,56 @@ public class WorkOrderController implements Serializable {
     }
 
     public void filterList() {
-//        if (!filterCriteria.empty()) {
-//            workOrderList.clear();
-//
-//            for (WorkOrder inv : originalWorkOrderList) {
-//                if (Utils.notBlank(filterCriteria.getWorkOrderPeriod())) {
-//                    if ("today".equalsIgnoreCase(filterCriteria.getWorkOrderPeriod())) {
+        if (!filterCriteria.empty()) {
+            workOrderList.clear();
+
+            for (WorkOrder inv : originalWorkOrderList) {
+//                if (Utils.notBlank(filterCriteria.getInvoicePeriod())) {
+//                    if ("today".equalsIgnoreCase(filterCriteria.getInvoicePeriod())) {
 //                        if (inv.getWorkOrderDate() != null && (inv.getWorkOrderDate().equals(new Date()))) {
 //                            workOrderList.add(inv);
 //                        }
-//                    } else if ("yest".equalsIgnoreCase(filterCriteria.getWorkOrderPeriod())) {
+//                    } else if ("yest".equalsIgnoreCase(filterCriteria.getInvoicePeriod())) {
 ////                            if(Utils.notBlank(inv.getStatus()) && inv.getStatus().equalsIgnoreCase(filterCriteria.getStatus())){
 ////                                workOrderList.add(inv);
 ////                            }
 //                    }
-//                } else if (Utils.notBlank(filterCriteria.getStatus())) {
-//                    if (Utils.notBlank(inv.getStatus()) && inv.getStatus().equalsIgnoreCase(filterCriteria.getStatus())) {
-//                        workOrderList.add(inv);
-//                    }
-//                } else if (filterCriteria.getCustomer() != null && filterCriteria.getCustomer().getCustomerId() != null) {
-//                    if (inv.getCustomerId() != null && inv.getCustomerId().getCustomerId() != null
-//                            && inv.getCustomerId().getCustomerId().equals(filterCriteria.getCustomer().getCustomerId())) {
-//                        workOrderList.add(inv);
-//                    }
+//                } else 
+                if (Utils.notBlank(filterCriteria.getStatus())) {
+                    if (Utils.notBlank(inv.getStatus()) && inv.getStatus().equalsIgnoreCase(filterCriteria.getStatus())) {
+                        workOrderList.add(inv);
+                    }
+                } else if (filterCriteria.getCustomer() != null && filterCriteria.getCustomer().getCustomerId() != null) {
+                    if (inv.getCustomerId() != null && inv.getCustomerId().getCustomerId() != null
+                            && inv.getCustomerId().getCustomerId().equals(filterCriteria.getCustomer().getCustomerId())) {
+                        workOrderList.add(inv);
+                    }
+                }  else if (Utils.notBlank(filterCriteria.getVin())) {
+                    if (inv.getVehicle()!= null && Utils.notBlank(inv.getVehicle().getVin())
+                            && inv.getVehicle().getVin().equals(filterCriteria.getVin())) {
+                        workOrderList.add(inv);
+                    }
+                }  else if (filterCriteria.getAssignedUser() != null) {
+                    if (inv.getAssignedUser()!= null && inv.getAssignedUser().getUserId().equals(filterCriteria.getAssignedUser().getUserId())) {
+                        workOrderList.add(inv);
+                    }
+                }  else if (Utils.notBlank(filterCriteria.getInvoicedPaidAssigned())) {
+                    if ("assigned".equals(filterCriteria.getInvoicedPaidAssigned())) {
+                        if(inv.isAssigned()){
+                            workOrderList.add(inv);
+                        }
+                    }
+                    else if ("invoiced".equals(filterCriteria.getInvoicedPaidAssigned())) {
+                        if(inv.isInvoiced()){
+                            workOrderList.add(inv);
+                        }
+                    }
+                    else if ("paid".equals(filterCriteria.getInvoicedPaidAssigned())) {
+                        if(inv.isPaid()){
+                            workOrderList.add(inv);
+                        }
+                    }
+                }
 //                } else if (filterCriteria.getFromAmount() != null && filterCriteria.getToAmount() != null) {
 //                    if (inv.getAmount() != null && inv.getAmount() >= filterCriteria.getFromAmount()
 //                            && inv.getAmount() <= filterCriteria.getToAmount()) {
@@ -457,23 +494,24 @@ public class WorkOrderController implements Serializable {
 //                        workOrderList.add(inv);
 //                    }
 //                }
-//            }
-//        }
+            }
+        }
     }
 
     public void resetSearch() {
-        workOrderList = new ArrayList(originalWorkOrderList);
-//        filterCriteria = new SearchWorkOrderVO();
+        workOrderList.clear();
+        workOrderList.addAll(originalWorkOrderList);
+        filterCriteria = new SearchInvoiceVO();
+        //recreateModel();
     }
-//
-//    public SearchWorkOrderVO getFilterCriteria() {
-//        return filterCriteria;
-//        return filterCriteria;
-//    }
 
-//    public void setFilterCriteria(SearchWorkOrderVO filterCriteria) {
-//        this.filterCriteria = filterCriteria;
-//    }
+    public SearchInvoiceVO getFilterCriteria() {
+        return filterCriteria;
+    }
+
+    public void setFilterCriteria(SearchInvoiceVO filterCriteria) {
+        this.filterCriteria = filterCriteria;
+    }
 
     public WorkOrderDataModel getModel() {
         if (model == null) {
@@ -538,7 +576,7 @@ public class WorkOrderController implements Serializable {
     public void viewPdf() {
         try {
             ReportHelper.viewWorkOrderPDF(current, viewOptions);
-        } catch (IOException ex) {
+        } catch (Exception ex) {
             Logger.getLogger(WorkOrderController.class.getName()).log(Level.SEVERE, "Error viewing pdf", ex);
         }
     }
@@ -892,8 +930,8 @@ public class WorkOrderController implements Serializable {
             if (currentTransaction.getTransType().equalsIgnoreCase(TransTypeEnum.PAYMENT.getValue())) {
                 //total payment cannot be greater than invoiced amount 
                 if(currentTransaction.getAmount() > current.getAmount()){
-                    validated = false;
-                    JsfUtil.addErrorMessage("Payment amount exceeds invoiced amount.");
+                    //validated = false;
+                    JsfUtil.addInfoMessage("Payment amount exceeds invoiced amount.");
                 }
             }
         }
@@ -911,53 +949,63 @@ public class WorkOrderController implements Serializable {
     }   
     
     public String filterUserInvoices(){
-//        List<Invoice> list = new ArrayList<>();
-//        
-//        if(!userInvoiceVO.empty()){        
-//            Boolean addItem = false;
-//            for(Invoice inv : getInvoiceList()){
-//                addItem = false;
-//                if(userInvoiceVO.getUser() != null){
-//                    if(inv.getWorkOrder() != null && inv.getWorkOrder().getAssignedUser() != null && 
-//                            inv.getWorkOrder().getAssignedUser().getUserId().equals(userInvoiceVO.getUser().getUserId())){
-//                        log.info("add item true for " + userInvoiceVO.getUser() );
-//                        addItem = true;                    
-//                    }
-//                }                
-//                if((userInvoiceVO.getUser() == null || addItem ) && userInvoiceVO.getMonth()!= null){
-//                    log.info("month is not null");
-//                    //addItem = false;
-//                    if(inv.getInvoiceDate()!= null && 
-//                            (userInvoiceVO.getMonth().equalsIgnoreCase(Utils.getMonthNameFromDate(inv.getInvoiceDate())))){
-//                        addItem = true;                                            
-//                    }
-//                    else{
-//                         addItem = false;   
-//                    }
-//                }       
-//                
-//                if(addItem){
-//                    log.info("adding item...");
-//                    list.add(inv); 
-//                }
-//            }
-//        
-//            userInvoiceVO.setInvoiceList(list);
-//        }          
-//        
+        List<WorkOrder> list = new ArrayList<>();
+        userInvoiceVO.setTotLaborAmt(0.0);
+        userInvoiceVO.setTotAdjLaborAmt(0.0);
+        userInvoiceVO.setIncentiveAmount(0.0);
+        userInvoiceVO.setTotInvoiceAmt(0.0);
+        
+        if(!userInvoiceVO.empty()){        
+            Boolean addItem = false;
+            for(WorkOrder inv : getWorkOrderList()){
+                addItem = false;
+                if(userInvoiceVO.getUser() != null){
+                    if(inv.getAssignedUser() != null && inv.getAssignedUser().getUserId().equals(userInvoiceVO.getUser().getUserId())){
+                        log.info("add item true for " + userInvoiceVO.getUser() );
+                        addItem = true;                    
+                    }
+                }                
+                if((userInvoiceVO.getUser() == null || addItem ) && userInvoiceVO.getMonth()!= null){
+                    log.info("month is not null");
+                    //addItem = false;
+                    if(inv.getWorkOrderDate()!= null && 
+                            (userInvoiceVO.getMonth().equalsIgnoreCase(Utils.getMonthNameFromDate(inv.getWorkOrderDate())))){
+                        addItem = true;                                            
+                    }
+                    else{
+                         addItem = false;   
+                    }
+                }       
+                
+                if(addItem){
+                    log.info("adding item...");
+                    list.add(inv); 
+                    userInvoiceVO.setTotLaborAmt(Utils.getDoubleValue(inv.getLaborAmt()) + userInvoiceVO.getTotLaborAmt());
+                    userInvoiceVO.setTotAdjLaborAmt(Utils.getDoubleValue(inv.getLaborAdjAmt()) + userInvoiceVO.getTotAdjLaborAmt());
+                    userInvoiceVO.setTotInvoiceAmt(Utils.getDoubleValue(inv.getAmount()) + userInvoiceVO.getTotInvoiceAmt());
+                }
+            }
+        
+            Double incentive = userInvoiceVO.getTotLaborAmt()+userInvoiceVO.getTotAdjLaborAmt() - 10000.00;
+            if(incentive > 0.0){
+                userInvoiceVO.setIncentiveAmount(incentive);
+            }
+            userInvoiceVO.setWoList(list);
+        }          
+        
         return "";
     }
     
     public void groupUserInvByMonthlyLaborTots(){  
         
-//        Multimap<User, UserInvMonLbrTot> userToInvMonTot = ArrayListMultimap.create();
-//                
-//        for(Invoice inv : getInvoiceList()){           
-//            User user = inv.getWorkOrder().getAssignedUser();
-//            String month = Utils.getMonthNameFromDate(inv.getInvoiceDate());
-//
-////            userToInvMonTot.put(user,new UserInvMonLbrTot(user, month, inv));
-//        }               
+        Multimap<User, UserInvMonLbrTot> userToInvMonTot = ArrayListMultimap.create();
+                
+        for(WorkOrder inv : getWorkOrderList()){           
+            User user = inv.getAssignedUser();
+            String month = Utils.getMonthNameFromDate(inv.getWorkOrderDate());
+
+//            userToInvMonTot.put(user,new UserInvMonLbrTot(user, month, inv));
+        }               
     }
     
     public String onFlowProcess(FlowEvent event) {
@@ -1022,4 +1070,13 @@ public class WorkOrderController implements Serializable {
     public void setCurrentNotes(WorkOrderNotes currentNotes) {
         this.currentNotes = currentNotes;
     }       
+
+    public UserInvoiceVO getUserInvoiceVO() {
+        return userInvoiceVO;
+    }
+
+    public void setUserInvoiceVO(UserInvoiceVO userInvoiceVO) {
+        this.userInvoiceVO = userInvoiceVO;
+    }
+    
 }

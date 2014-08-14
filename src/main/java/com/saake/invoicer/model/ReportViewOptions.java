@@ -13,6 +13,7 @@ package com.saake.invoicer.model;
 public class ReportViewOptions {
     public Boolean showItemAmounts;
     public Boolean showTotalAmount;
+    public Boolean showPaymentHistory = true;
     public Boolean showUnitPrice;
     public Boolean showUserAssigned;
 
@@ -46,6 +47,14 @@ public class ReportViewOptions {
 
     public void setShowUserAssigned(Boolean showUserAssigned) {
         this.showUserAssigned = showUserAssigned;
+    }
+
+    public Boolean getShowPaymentHistory() {
+        return showPaymentHistory;
+    }
+
+    public void setShowPaymentHistory(Boolean showPaymentHistory) {
+        this.showPaymentHistory = showPaymentHistory;
     }
 
         
