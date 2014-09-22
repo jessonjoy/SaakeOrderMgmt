@@ -517,6 +517,36 @@ public class Utils {
         }
         return d;
     }
+    
+    public static Date getDate(String s, String format) {
+        Date d = null;
+
+        try {
+            if(isBlank(format)){
+                format = "MM/dd/yyyy";
+            }
+            DateFormat sf = new SimpleDateFormat(format);
+            d = sf.parse(s);
+
+        } catch (Exception e) {
+            //do nothing
+        }
+        return d;
+    }
+    
+    public static String getDayOfWeekFromStr(String date, String format) {
+
+        SimpleDateFormat sdf = new SimpleDateFormat("EE");
+        
+        return sdf.format(getDate(date, format));
+    }
+
+    public static String getDayOfWeek(String date) {
+
+        SimpleDateFormat sdf = new SimpleDateFormat("EE");
+        
+        return sdf.format(date);
+    }
 
     /**
      * Set the Calendar day month to 1
