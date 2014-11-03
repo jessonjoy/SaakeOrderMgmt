@@ -102,17 +102,29 @@ public class ReportHelper {
             }
             
             dataList.add(dat);
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/master
         }
         return dataList;
     }
         
     private static <T> void streamPdf(T obj, Boolean download, String template, String type) throws IOException {
         byte[] pdfByteArray = null;
+<<<<<<< HEAD
         
         if(Utils.notBlank(template)){
             pdfByteArray = generatePdfFromJasperTemplate(buildDataListForWorkOrderReport((WorkOrder)obj), template);
         }
+=======
+        String type = "";
+
+         if(obj instanceof WorkOrder){
+            type = "WorkOrder";
+            pdfByteArray = generatePdfFromJasperTemplate(buildDataListForWorkOrderReport((WorkOrder)obj), "saakeWorkOrder.jasper");
+        } 
+>>>>>>> origin/master
 
         if (pdfByteArray != null && pdfByteArray.length > 0) {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -152,6 +164,7 @@ public class ReportHelper {
 
                     if (jasperPrint != null) {
                         pdfByteArray = generatePdfBytesFromJasperTemplate(jasperPrint);
+<<<<<<< HEAD
                         
 //                        JRHtmlInfo jRHtmlInfo = ReportHelper.generateHtmlFromJasperTemplateV2(jasperPrint);
 //                        EmailHelper emailHelper = new EmailHelper();
@@ -165,6 +178,9 @@ public class ReportHelper {
                      
                     }                                   
             
+=======
+                    }
+>>>>>>> origin/master
                 } catch (Exception e) {
                     throw new Exception("Error exporting pdf", e);
                 }
