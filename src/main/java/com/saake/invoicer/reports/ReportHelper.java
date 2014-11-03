@@ -47,8 +47,6 @@ import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
-import net.sf.jasperreports.engine.export.JRHtmlExporter;
-import net.sf.jasperreports.engine.export.JRHtmlExporterParameter;
 import net.sf.jasperreports.engine.export.JRPrintServiceExporter;
 import net.sf.jasperreports.engine.export.JRPrintServiceExporterParameter;
 import net.sf.jasperreports.engine.fill.JRFillParameter;
@@ -392,52 +390,4 @@ public class ReportHelper {
 
     }
 
-    public static String generateHtmlFromJasperTemplate(JasperPrint jPrint){
-        StringBuffer message = new StringBuffer();
-        JRHtmlExporter jrHtmlExp = new JRHtmlExporter();
-        jrHtmlExp.setParameter(JRHtmlExporterParameter.JASPER_PRINT, jPrint);
-        jrHtmlExp.setParameter(JRHtmlExporterParameter.OUTPUT_STRING_BUFFER, message);
-        jrHtmlExp.setParameter(JRHtmlExporterParameter.IMAGES_DIR_NAME, "C:\\DevTools\\Servers\\Glassfish\\glassfish-3.1.2.2\\glassfish\\domains\\domain1\\applications");
-//        jrHtmlExp.setParameter(JRHtmlExporterParameter.IMAGES_URI, "/elm/images/connect_logo.png");
-        jrHtmlExp.setParameter(JRHtmlExporterParameter.IS_OUTPUT_IMAGES_TO_DIR, true);
-        jrHtmlExp.setParameter(JRHtmlExporterParameter.IS_REMOVE_EMPTY_SPACE_BETWEEN_ROWS, true);
-        jrHtmlExp.setParameter(JRHtmlExporterParameter.IS_USING_IMAGES_TO_ALIGN, false);
-        jrHtmlExp.setParameter(JRHtmlExporterParameter.IS_WHITE_PAGE_BACKGROUND, false);
-        jrHtmlExp.setParameter(JRHtmlExporterParameter.IS_WRAP_BREAK_WORD, true);
-        Map imagesData = new HashMap();
-        jrHtmlExp.setParameter(JRHtmlExporterParameter.IMAGES_MAP, imagesData);
-        jrHtmlExp.setParameter(JRHtmlExporterParameter.IMAGES_URI, "cid:");
-
-        try {
-            jrHtmlExp.exportReport();
-        } catch (JRException e) {
-            log.error("Error generating HTML from Jasper Template:"+ jPrint.getName(),e);
-        }
-
-        return message.toString();
-
-    }
-    
-    public static JRHtmlInfo generateHtmlFromJasperTemplateV2(JasperPrint jPrint){
-        StringBuffer message = new StringBuffer();
-        JRHtmlExporter jrHtmlExp = new JRHtmlExporter();
-        jrHtmlExp.setParameter(JRHtmlExporterParameter.JASPER_PRINT, jPrint);
-        jrHtmlExp.setParameter(JRHtmlExporterParameter.OUTPUT_STRING_BUFFER, message);
-        jrHtmlExp.setParameter(JRHtmlExporterParameter.IS_OUTPUT_IMAGES_TO_DIR, true);
-        jrHtmlExp.setParameter(JRHtmlExporterParameter.IS_REMOVE_EMPTY_SPACE_BETWEEN_ROWS, true);
-        jrHtmlExp.setParameter(JRHtmlExporterParameter.IS_USING_IMAGES_TO_ALIGN, false);
-        jrHtmlExp.setParameter(JRHtmlExporterParameter.IS_WHITE_PAGE_BACKGROUND, false);
-        jrHtmlExp.setParameter(JRHtmlExporterParameter.IS_WRAP_BREAK_WORD, true);
-        Map imagesData = new HashMap();
-        jrHtmlExp.setParameter(JRHtmlExporterParameter.IMAGES_MAP, imagesData);
-        jrHtmlExp.setParameter(JRHtmlExporterParameter.IMAGES_URI, "cid:");
-
-        try {
-            jrHtmlExp.exportReport();
-        } catch (JRException e) {
-            log.error("Error generating HTML from Jasper Template:"+ jPrint.getName(),e);
-        }
-
-        return new JRHtmlInfo(message.toString(), imagesData);
-    }        
 }
