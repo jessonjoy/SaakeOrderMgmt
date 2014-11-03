@@ -87,7 +87,10 @@
                         <h:selectOneMenu  value="#{workOrderCtrl.filterCriteria.status}" label="Status" >
                             <f:selectItems value="#{listCtrl.woStatusSI}"  />
                         </h:selectOneMenu>
-
+                        
+                        <h:outputText value="Tel No" />
+                        <h:inputText value="#{workOrderCtrl.filterCriteria.telNum}" />
+                        
                         <h:panelGroup>
 
                             <p:commandLink rendered="false" type="button" value="Filter More.." onclick="advSearchPanel.toggle();" style="font-weight: 10px" />

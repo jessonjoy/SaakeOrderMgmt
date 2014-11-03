@@ -8,15 +8,11 @@ import com.saake.invoicer.entity.Transaction;
 import com.saake.invoicer.entity.Vehicle;
 import com.saake.invoicer.entity.WorkOrder;
 import com.saake.invoicer.entity.WorkOrderItems;
-import com.saake.invoicer.model.ChartData;
 import com.saake.invoicer.model.InvoiceItemsData;
-import com.saake.invoicer.model.InvoiceReportData;
 import com.saake.invoicer.model.PaymentsData;
 import com.saake.invoicer.model.ReportViewOptions;
 import com.saake.invoicer.model.WorkOrderReportData;
-import com.saake.invoicer.util.Constants;
 import com.saake.invoicer.util.JsfUtil;
-import com.saake.invoicer.util.MailServices;
 import com.saake.invoicer.util.Utils;
 import java.awt.print.PageFormat;
 import java.awt.print.PrinterJob;
@@ -24,16 +20,12 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.sql.Connection;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import javax.faces.context.ExternalContext;
@@ -62,7 +54,6 @@ import net.sf.jasperreports.engine.export.JRPrintServiceExporterParameter;
 import net.sf.jasperreports.engine.fill.JRFillParameter;
 import net.sf.jasperreports.engine.util.FileResolver;
 import net.sf.jasperreports.engine.util.JRLoader;
-import org.apache.commons.collections.list.TreeList;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -82,6 +73,7 @@ public class ReportHelper {
             
             dat.setAmount(viewOptions.showTotalAmount? wo.getAmount() : null);
             dat.setWorkOrderDate(wo.getWorkOrderDate());
+            dat.setInvoiceDate(wo.getInvoicedTs());
             dat.setWorkOrderItems(convertWorkOrderItems(wo));
             dat.setPayments(viewOptions.showPaymentHistory? convertPayments(wo, dat):null);
             dat.setAddressLine1(wo.getCustomerId().getAddressLine1());
@@ -111,56 +103,18 @@ public class ReportHelper {
                 dat.setYear(veh.getYear());
             }
             
-            List<ChartData> chartDataList = new LinkedList<>();
-
-            String format = "yyyy-MM-dd" ;
-            chartDataList.add(new ChartData("Last Week", Utils.getDayOfWeekFromStr("2014-08-10", format), 202));
-            chartDataList.add(new ChartData("Last Week", Utils.getDayOfWeekFromStr("2014-08-11", format), 212));
-            chartDataList.add(new ChartData("Last Week", Utils.getDayOfWeekFromStr("2014-08-12", format), 245));
-            chartDataList.add(new ChartData("Last Week", Utils.getDayOfWeekFromStr("2014-08-13", format), 191));
-            chartDataList.add(new ChartData("Last Week", Utils.getDayOfWeekFromStr("2014-08-14", format), 300));
-            chartDataList.add(new ChartData("Last Week", Utils.getDayOfWeekFromStr("2014-08-15", format), 222));
-            chartDataList.add(new ChartData("Last Week", Utils.getDayOfWeekFromStr("2014-08-16", format), 214));
-            chartDataList.add(new ChartData("This Week", Utils.getDayOfWeekFromStr("2014-08-17", format), 225));
-            chartDataList.add(new ChartData("This Week", Utils.getDayOfWeekFromStr("2014-08-18", format), 181));
-            chartDataList.add(new ChartData("This Week", Utils.getDayOfWeekFromStr("2014-08-19", format), 230));
-            chartDataList.add(new ChartData("This Week", Utils.getDayOfWeekFromStr("2014-08-20", format), 290));
-            chartDataList.add(new ChartData("This Week", Utils.getDayOfWeekFromStr("2014-08-21", format), 270));
-            chartDataList.add(new ChartData("This Week", Utils.getDayOfWeekFromStr("2014-08-22", format), 235));
-            chartDataList.add(new ChartData("This Week", Utils.getDayOfWeekFromStr("2014-08-23", format), 233));
-            
-            
-            dat.setChartData(chartDataList);
-            
-            dat.setAddress("601 Sawyer Street, Houston, TX 77033");
-            dat.setAlertThresh("20");
-            dat.setAlertThreshType("%");
-            dat.setChangeKwh(120.0);
-            dat.setChangePercent("26%");
-            dat.setSumPrev1Wk(566.22);
-            dat.setSumPrev2Wk(446.22);
-            dat.setPrev2WkStart("08-10-2014");
-            dat.setPrev2WkEnd("08-16-2014");
-            dat.setPrev1WkStart("08-17-2014");           
-            dat.setPrev1WkEnd("08-23-2014");
-            
             dataList.add(dat);
-            
-            WorkOrderReportData dat2 = dat;
-            
-            dataList.add(dat2);
+
         }
         return dataList;
     }
         
-    private static <T> void streamPdf(T obj, Boolean download) throws IOException {
+    private static <T> void streamPdf(T obj, Boolean download, String template, String type) throws IOException {
         byte[] pdfByteArray = null;
-        String type = "";
-
-         if(obj instanceof WorkOrder){
-            type = "WorkOrder";
-            pdfByteArray = generatePdfFromJasperTemplate(buildDataListForWorkOrderReport((WorkOrder)obj), "inwtWeeklyUsage2.jasper");
-        } 
+        
+        if(Utils.notBlank(template)){
+            pdfByteArray = generatePdfFromJasperTemplate(buildDataListForWorkOrderReport((WorkOrder)obj), template);
+        }
 
         if (pdfByteArray != null && pdfByteArray.length > 0) {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -201,15 +155,15 @@ public class ReportHelper {
                     if (jasperPrint != null) {
                         pdfByteArray = generatePdfBytesFromJasperTemplate(jasperPrint);
                         
-                        JRHtmlInfo jRHtmlInfo = ReportHelper.generateHtmlFromJasperTemplateV2(jasperPrint);
-                        EmailHelper emailHelper = new EmailHelper();
-                        List<ByteArrayDataSource> imgDSList = emailHelper.getImageDataSourceArr(jRHtmlInfo.getImagesData());
-                        
-                        MailServices ms = new MailServices("mail/defaultsession");
-
-                        ms.sendEmail("jessonjoy9@gmail.com"
-                                    , "jessonjoy9@gmail.com",
-                                    "TEST from GF", jRHtmlInfo.getHtmlString(), imgDSList);
+//                        JRHtmlInfo jRHtmlInfo = ReportHelper.generateHtmlFromJasperTemplateV2(jasperPrint);
+//                        EmailHelper emailHelper = new EmailHelper();
+//                        List<ByteArrayDataSource> imgDSList = emailHelper.getImageDataSourceArr(jRHtmlInfo.getImagesData());
+//                        
+//                        MailServices ms = new MailServices("mail/defaultsession");
+//
+//                        ms.sendEmail("jessonjoy9@gmail.com"
+//                                    , "jessonjoy9@gmail.com",
+//                                    "TEST from GF", jRHtmlInfo.getHtmlString(), imgDSList);
                      
                     }                                   
             
@@ -342,13 +296,13 @@ public class ReportHelper {
         }
     }
     
-    public static void viewWorkOrderPDF(WorkOrder wo) throws IOException {
-        streamPdf(wo, Boolean.FALSE);
-    }
-
-    public static void downloadWorkOrderPDF(WorkOrder wo) throws IOException {
-        streamPdf(wo, Boolean.TRUE);
-    }
+//    public static void viewWorkOrderPDF(WorkOrder wo) throws IOException {
+//        streamPdf(wo, Boolean.FALSE, "wo");
+//    }
+//
+//    public static void downloadWorkOrderPDF(WorkOrder wo) throws IOException {
+//        streamPdf(wo, Boolean.TRUE, "wo");
+//    }
        
     private static FileResolver fileResolver = new FileResolver() {
         @Override
@@ -394,10 +348,28 @@ public class ReportHelper {
         return list;
     }
 
-    public static void viewWorkOrderPDF(WorkOrder wo, ReportViewOptions viewOptions1) throws IOException {        
+    public static void viewPDF(String type, WorkOrder current, ReportViewOptions viewOptions) throws IOException {
+        String template = "";
+        if(type.equalsIgnoreCase("wo")){
+            template = "saakeWorkOrder.jasper";            
+            viewWorkOrderPDF(current, viewOptions, template);
+        } 
+        else if(type.equalsIgnoreCase("inv")){
+            template = "saakeInvoice.jasper";
+            viewInvoicePDF(current, viewOptions, template);
+        } 
+        
+    }
+        
+    public static void viewWorkOrderPDF(WorkOrder wo, ReportViewOptions viewOptions1, String template) throws IOException {        
         viewOptions = viewOptions1;
-        streamPdf(wo, Boolean.FALSE);    
+        streamPdf(wo, Boolean.FALSE,template,"wo");    
     }    
+
+    public static void viewInvoicePDF(WorkOrder wo, ReportViewOptions viewOptions1, String template) throws IOException {        
+        viewOptions = viewOptions1;
+        streamPdf(wo, Boolean.FALSE,template,"inv");    
+    }
 
     private static List<PaymentsData> convertPayments(WorkOrder workOrder, WorkOrderReportData dat) {
         List<PaymentsData> list = new ArrayList<>();

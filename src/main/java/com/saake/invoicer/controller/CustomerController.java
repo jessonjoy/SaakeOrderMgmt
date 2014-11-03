@@ -4,7 +4,7 @@ import com.saake.invoicer.entity.Customer;
 import com.saake.invoicer.controller.masterdata.util.JsfUtil;
 import com.saake.invoicer.entity.Vehicle;
 import com.saake.invoicer.entity.WorkOrder;
-import com.saake.invoicer.model.SearchInvoiceVO;
+import com.saake.invoicer.model.SearchWorkOrderVO;
 import com.saake.invoicer.sessionbean.CustomerFacade;
 import com.saake.invoicer.util.Utils;
 import java.io.Serializable;
@@ -37,7 +37,7 @@ public class CustomerController implements Serializable {
     private int selectedItemIndex;
     private int rowKeyVar;
     
-     private SearchInvoiceVO filterCriteria = new SearchInvoiceVO();
+     private SearchWorkOrderVO filterCriteria = new SearchWorkOrderVO();
 
     @PostConstruct
     private void initialize() {
@@ -344,15 +344,15 @@ public class CustomerController implements Serializable {
     public void resetSearch() {
         items.clear();
         items.addAll(originalCustList);
-        filterCriteria = new SearchInvoiceVO();
+        filterCriteria = new SearchWorkOrderVO();
         //recreateModel();
     }
 
-    public SearchInvoiceVO getFilterCriteria() {
+    public SearchWorkOrderVO getFilterCriteria() {
         return filterCriteria;
     }
 
-    public void setFilterCriteria(SearchInvoiceVO filterCriteria) {
+    public void setFilterCriteria(SearchWorkOrderVO filterCriteria) {
         this.filterCriteria = filterCriteria;
     }
         

@@ -18,7 +18,7 @@ import com.saake.invoicer.entity.Item;
 import com.saake.invoicer.entity.Transaction;
 import com.saake.invoicer.entity.User;
 import com.saake.invoicer.entity.WorkOrderNotes;
-import com.saake.invoicer.model.SearchInvoiceVO;
+import com.saake.invoicer.model.SearchWorkOrderVO;
 import com.saake.invoicer.model.UserInvMonLbrTot;
 import com.saake.invoicer.model.UserInvoiceVO;
 import com.saake.invoicer.model.WorkOrderDataModel;
@@ -61,7 +61,7 @@ public class WorkOrderController implements Serializable {
     private ReportViewOptions viewOptions;
     private UserInvoiceVO userInvoiceVO ;
     
-    private SearchInvoiceVO filterCriteria = new SearchInvoiceVO();
+    private SearchWorkOrderVO filterCriteria = new SearchWorkOrderVO();
 //    private Orders invoiceOrder;
     private Transaction currentTransaction = new Transaction();
     private WorkOrderNotes currentNotes = new WorkOrderNotes();
@@ -78,6 +78,9 @@ public class WorkOrderController implements Serializable {
     ItemController itemCtrl;
     
     @Inject
+    SearchController searchCtrl;
+    
+    @Inject
     private com.saake.invoicer.sessionbean.WorkOrderFacade woFacade;
     
     @Inject
@@ -92,7 +95,7 @@ public class WorkOrderController implements Serializable {
         this.suggestVehicleList = new ArrayList<>();
         this.viewOptions = new ReportViewOptions();
         
-        log.info("Inside WorkOrderController!!!");
+        log.info("Inside WorkOrderController!!!~~~~~~~~~~~");
         Object inv = JsfUtil.getRequestObject("item");
 
         if (inv != null && inv instanceof WorkOrder) {
@@ -117,7 +120,11 @@ public class WorkOrderController implements Serializable {
         } else if (JsfUtil.getViewId().contains("view")) {
             viewWorkOrderInit();
         } else if (JsfUtil.getViewId().contains("list")) {
-            prepareList();
+            recreateModel();
+            if(searchCtrl != null && !searchCtrl.getSearchWorkOrder().empty()){
+                filterCriteria = searchCtrl.getSearchWorkOrder();
+                filterList();
+            }
         }else if (JsfUtil.getViewId().contains("reports/userInvoices")) {
             initUserInvoice();
         }
@@ -150,6 +157,11 @@ public class WorkOrderController implements Serializable {
 
     public String redirectToList() {
         return "list.jsf?faces-redirect=true";
+    }
+
+    public String backToList() {
+
+        return "list.jsf";
     }
 
     public String prepareView() {
@@ -415,6 +427,8 @@ public class WorkOrderController implements Serializable {
 
     public void filterList() {
         if (!filterCriteria.empty()) {
+            searchCtrl.setSearchWorkOrder(filterCriteria);
+            
             workOrderList.clear();
 
             for (WorkOrder inv : originalWorkOrderList) {
@@ -441,6 +455,13 @@ public class WorkOrderController implements Serializable {
                 }  else if (Utils.notBlank(filterCriteria.getVin())) {
                     if (inv.getVehicle()!= null && Utils.notBlank(inv.getVehicle().getVin())
                             && inv.getVehicle().getVin().equals(filterCriteria.getVin())) {
+                        workOrderList.add(inv);
+                    }
+                }  else if (Utils.notBlank(filterCriteria.getTelNum())) {
+                     if (inv.getCustomerId() != null && ((inv.getCustomerId().getMobileNum()!= null
+                            && inv.getCustomerId().getMobileNum().toString().contains(filterCriteria.getTelNum().trim())) ||
+                             (inv.getCustomerId().getOfficePhoneNum()!= null
+                            && inv.getCustomerId().getOfficePhoneNum().toString().contains(filterCriteria.getTelNum().trim())))) {
                         workOrderList.add(inv);
                     }
                 }  else if (filterCriteria.getAssignedUser() != null) {
@@ -501,15 +522,15 @@ public class WorkOrderController implements Serializable {
     public void resetSearch() {
         workOrderList.clear();
         workOrderList.addAll(originalWorkOrderList);
-        filterCriteria = new SearchInvoiceVO();
+        filterCriteria = new SearchWorkOrderVO();
         //recreateModel();
     }
 
-    public SearchInvoiceVO getFilterCriteria() {
+    public SearchWorkOrderVO getFilterCriteria() {
         return filterCriteria;
     }
 
-    public void setFilterCriteria(SearchInvoiceVO filterCriteria) {
+    public void setFilterCriteria(SearchWorkOrderVO filterCriteria) {
         this.filterCriteria = filterCriteria;
     }
 
@@ -517,6 +538,8 @@ public class WorkOrderController implements Serializable {
         if (model == null) {
             model = new WorkOrderDataModel(getWorkOrderList());
         }
+        
+        
         return model;
     }
 
@@ -565,17 +588,33 @@ public class WorkOrderController implements Serializable {
         JsfUtil.addAttributeInSession("invoice", current);
     }
 
-    public void downloadPdf() {
+//    public void downloadPdf() {
+//        try {
+//            ReportHelper.downloadWorkOrderPDF(current);
+//        } catch (IOException ex) {
+//            Logger.getLogger(WorkOrderController.class.getName()).log(Level.SEVERE, "Error downloading pdf", ex);
+//        }
+//    }
+
+    public void viewPdf(String type, WorkOrder current, ReportViewOptions viewOptions) {
         try {
-            ReportHelper.downloadWorkOrderPDF(current);
-        } catch (IOException ex) {
-            Logger.getLogger(WorkOrderController.class.getName()).log(Level.SEVERE, "Error downloading pdf", ex);
+            ReportHelper.viewPDF(type, current, viewOptions);
+        } catch (Exception ex) {
+            Logger.getLogger(WorkOrderController.class.getName()).log(Level.SEVERE, "Error viewing pdf", ex);
         }
     }
 
-    public void viewPdf() {
+    public void viewInvPdf() {
         try {
-            ReportHelper.viewWorkOrderPDF(current, viewOptions);
+            ReportHelper.viewPDF("inv", current, viewOptions);
+        } catch (Exception ex) {
+            Logger.getLogger(WorkOrderController.class.getName()).log(Level.SEVERE, "Error viewing pdf", ex);
+        }
+    }
+
+    public void viewWoPdf() {
+        try {
+            ReportHelper.viewPDF("wo", current, viewOptions);
         } catch (Exception ex) {
             Logger.getLogger(WorkOrderController.class.getName()).log(Level.SEVERE, "Error viewing pdf", ex);
         }

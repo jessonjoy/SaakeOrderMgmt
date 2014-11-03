@@ -14,7 +14,7 @@ import java.util.Date;
  *
  * @author jn
  */
-public class SearchInvoiceVO implements Serializable{
+public class SearchWorkOrderVO implements Serializable{
     private Date fromDate;
     private Date toDate;
     private Integer invoiceId;
@@ -22,13 +22,14 @@ public class SearchInvoiceVO implements Serializable{
     private String status;
     private String searchText;
     private String vin;
+    private String telNum;
     private String invoicePeriod;
     private String invoicedPaidAssigned;
     private Customer customer ;
     private User assignedUser ;
     private Double fromAmount;
     private Double toAmount;
-
+       
     public Date getFromDate() {
         return fromDate;
     }
@@ -132,11 +133,19 @@ public class SearchInvoiceVO implements Serializable{
     public void setInvoicedPaidAssigned(String invoicedPaidAssigned) {
         this.invoicedPaidAssigned = invoicedPaidAssigned;
     }
+
+    public String getTelNum() {
+        return telNum;
+    }
+
+    public void setTelNum(String telNum) {
+        this.telNum = telNum;
+    }
     
     public boolean empty() {
         return (this.customer == null || this.customer.empty()) && this.fromAmount == null && this.toAmount == null
                 && this.fromDate == null && this.toDate == null && this.invoiceId == null && Utils.isBlank(this.invoiceNum) 
-                && Utils.isBlank(this.searchText) && Utils.isBlank(this.vin) && Utils.isBlank(this.status) && Utils.isBlank(this.invoicePeriod);
+                && Utils.isBlank(this.searchText) && Utils.isBlank(this.telNum) && Utils.isBlank(this.vin) && Utils.isBlank(this.status) && Utils.isBlank(this.invoicePeriod);
                 
     } 
        

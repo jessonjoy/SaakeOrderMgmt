@@ -25,6 +25,10 @@ public class WorkOrderReportData implements Serializable {
     private Double amount;
     private Double totPaidAmt = 0.0;
     private Double advanceAmount;
+        
+    private Date invoiceDate;    
+    private Double paidAmount;
+    private Double balanceAmount;
 
     private String companyName;
     private String firstName;
@@ -48,22 +52,6 @@ public class WorkOrderReportData implements Serializable {
 
     private List<InvoiceItemsData> workOrderItems;
     private List<PaymentsData> payments;
-    
-    //tmp
-    private List<ChartData> chartData;
-    private String alertThresh;
-    private String alertThreshType;
-    private String address;
-    private Double sumPrev1Wk;
-    private String prev1WkStart;
-    private String prev1WkEnd;   
-    private Double sumPrev2Wk;
-    private String prev2WkStart;
-    private String prev2WkEnd;
-    private Double changeKwh;
-    private String changePercent;
-    private String usageChangeDesc;
-   
     
     public Integer getWorkOrderId() {
         return workOrderId;
@@ -297,109 +285,27 @@ public class WorkOrderReportData implements Serializable {
         this.totPaidAmt = totPaidAmt;
     }       
 
-    public List<ChartData> getChartData() {
-        return chartData;
+    public Date getInvoiceDate() {
+        return invoiceDate;
     }
 
-    public void setChartData(List<ChartData> chartData) {
-        this.chartData = chartData;
+    public void setInvoiceDate(Date invoiceDate) {
+        this.invoiceDate = invoiceDate;
     }
 
-    public String getAlertThresh() {
-        return alertThresh;
+    public Double getPaidAmount() {
+        return paidAmount;
     }
 
-    public void setAlertThresh(String alertThresh) {
-        this.alertThresh = alertThresh;
+    public void setPaidAmount(Double paidAmount) {
+        this.paidAmount = paidAmount;
     }
 
-    public String getAlertThreshType() {
-        return alertThreshType;
+    public Double getBalanceAmount() {
+        return balanceAmount;
     }
 
-    public void setAlertThreshType(String alertThreshType) {
-        this.alertThreshType = alertThreshType;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public Double getSumPrev1Wk() {
-        return sumPrev1Wk;
-    }
-
-    public void setSumPrev1Wk(Double sumPrev1Wk) {
-        this.sumPrev1Wk = sumPrev1Wk;
-    }
-
-    public String getPrev1WkStart() {
-        return prev1WkStart;
-    }
-
-    public void setPrev1WkStart(String prev1WkStart) {
-        this.prev1WkStart = prev1WkStart;
-    }
-
-    public String getPrev1WkEnd() {
-        return prev1WkEnd;
-    }
-
-    public void setPrev1WkEnd(String prev1WkEnd) {
-        this.prev1WkEnd = prev1WkEnd;
-    }
-
-    public Double getSumPrev2Wk() {
-        return sumPrev2Wk;
-    }
-
-    public void setSumPrev2Wk(Double sumPrev2Wk) {
-        this.sumPrev2Wk = sumPrev2Wk;
-    }
-
-    public String getPrev2WkStart() {
-        return prev2WkStart;
-    }
-
-    public void setPrev2WkStart(String prev2WkStart) {
-        this.prev2WkStart = prev2WkStart;
-    }
-
-    public String getPrev2WkEnd() {
-        return prev2WkEnd;
-    }
-
-    public void setPrev2WkEnd(String prev2WkEnd) {
-        this.prev2WkEnd = prev2WkEnd;
-    }
-
-    public Double getChangeKwh() {
-        return changeKwh;
-    }
-
-    public void setChangeKwh(Double changeKwh) {
-        this.changeKwh = changeKwh;
-    }
-
-    public String getChangePercent() {
-        return changePercent;
-    }
-
-    public void setChangePercent(String changePercent) {
-        this.changePercent = changePercent;
-    }
-
-    public String getUsageChangeDesc() {
-        return usageChangeDesc;
-    }
-
-    public void setUsageChangeDesc(String usageChangeDesc) {
-        this.usageChangeDesc = usageChangeDesc;
-    }
- 
-    
+    public void setBalanceAmount(Double balanceAmount) {
+        this.balanceAmount = balanceAmount;
+    }    
 }
