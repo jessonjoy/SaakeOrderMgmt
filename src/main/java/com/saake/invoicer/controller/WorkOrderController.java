@@ -945,13 +945,13 @@ public class WorkOrderController implements Serializable {
                     JsfUtil.addErrorMessage("Refund amount cannot exceed total paid amount.");
                 }
             }
-            else if (currentTransaction.getTransType().equalsIgnoreCase(TransTypeEnum.PAYMENT.getValue())) {
-                //total payment cannot be greater than invoiced amount 
-                if(currentTransaction.getAmount() + current.getTransactionAmount() > current.getAmount()){
-                    validated = false;
-                    JsfUtil.addErrorMessage("Payment amount exceeds invoiced amount.");
-                }
-            }
+//            else if (currentTransaction.getTransType().equalsIgnoreCase(TransTypeEnum.PAYMENT.getValue())) {
+//                //total payment cannot be greater than invoiced amount 
+//                if(currentTransaction.getAmount() + current.getTransactionAmount() > current.getAmount()){
+//                    validated = false;
+//                    JsfUtil.addErrorMessage("Payment amount exceeds invoiced amount.");
+//                }
+//            }
         } else {
             validated = false;
         }

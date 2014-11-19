@@ -51,11 +51,7 @@ public class WorkOrderReportData implements Serializable {
 
     private List<InvoiceItemsData> workOrderItems;
     private List<PaymentsData> payments;
-<<<<<<< HEAD
-    
-=======
 
->>>>>>> origin/master
     public Integer getWorkOrderId() {
         return workOrderId;
     }
@@ -287,8 +283,7 @@ public class WorkOrderReportData implements Serializable {
     public void setTotPaidAmt(Double totPaidAmt) {
         this.totPaidAmt = totPaidAmt;
     }       
-<<<<<<< HEAD
-
+    
     public Date getInvoiceDate() {
         return invoiceDate;
     }
@@ -312,6 +307,4 @@ public class WorkOrderReportData implements Serializable {
     public void setBalanceAmount(Double balanceAmount) {
         this.balanceAmount = balanceAmount;
     }    
-=======
->>>>>>> origin/master
 }

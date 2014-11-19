@@ -196,7 +196,11 @@ public class ItemController implements Serializable {
         
         if (Utils.notBlank(inp)) {
             for (Item item : getItems()) {
-                if (Utils.notBlank(item.getDescription())
+                if (Utils.notBlank(item.getItemCode())
+                        && item.getItemCode().toLowerCase().contains(inp.toString().trim().toLowerCase())) {
+
+                    suggestItemList.add(item);
+                } else if (Utils.notBlank(item.getDescription())
                         && item.getDescription().toLowerCase().contains(inp.toString().trim().toLowerCase())) {
 
                     suggestItemList.add(item);

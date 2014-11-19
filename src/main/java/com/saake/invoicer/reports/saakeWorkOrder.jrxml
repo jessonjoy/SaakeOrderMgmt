@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="saakeWorkOrder" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="39ce7a27-2886-4840-bc20-7026ee5d9c3f">
 	<property name="ireport.zoom" value="1.4641000000000006"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.y" value="380"/>
 	<style name="table">
 		<box>
 			<pen lineWidth="1.0" lineColor="#000000"/>
@@ -214,7 +214,7 @@
 		</band>
 	</pageHeader>
 	<detail>
-		<band height="88">
+		<band height="81">
 			<staticText>
 				<reportElement mode="Opaque" x="0" y="0" width="281" height="20" backcolor="#CCCCCC" uuid="532fc5a4-03c8-4a4d-b8b3-bd0b9f94bb3e"/>
 				<textElement>
@@ -224,7 +224,7 @@
 				<text><![CDATA[Customer Info]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="0" y="20" width="72" height="20" uuid="547bf6b9-4c35-490c-92b2-d867d32140cf"/>
+				<reportElement x="0" y="20" width="72" height="20" isRemoveLineWhenBlank="true" uuid="547bf6b9-4c35-490c-92b2-d867d32140cf"/>
 				<textElement>
 					<paragraph leftIndent="5"/>
 				</textElement>
@@ -243,7 +243,7 @@
 				<textFieldExpression><![CDATA[$F{city}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="0" y="40" width="281" height="40" uuid="5f3eb56d-6963-4bf3-8573-a22761d6747a"/>
+				<reportElement x="0" y="40" width="281" height="20" isRemoveLineWhenBlank="true" uuid="5f3eb56d-6963-4bf3-8573-a22761d6747a"/>
 				<textElement>
 					<paragraph leftIndent="5"/>
 				</textElement>
@@ -257,7 +257,7 @@
 				<text><![CDATA[Company Info]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="72" y="20" width="209" height="20" uuid="a3174162-bcf7-450a-a46a-f8dbfefcf4f2"/>
+				<reportElement x="72" y="20" width="209" height="20" isRemoveLineWhenBlank="true" uuid="a3174162-bcf7-450a-a46a-f8dbfefcf4f2"/>
 				<textElement>
 					<paragraph leftIndent="5"/>
 				</textElement>
@@ -272,7 +272,7 @@
 				<textFieldExpression><![CDATA[$F{zipCode}]]></textFieldExpression>
 			</textField>
 		</band>
-		<band height="55">
+		<band height="41">
 			<staticText>
 				<reportElement mode="Opaque" x="0" y="0" width="555" height="20" backcolor="#CCCCCC" uuid="9cf85978-c1f0-4661-97c2-c5e7db1d0d7e"/>
 				<textElement>
@@ -340,6 +340,7 @@
 			</textField>
 		</band>
 		<band height="45">
+			<printWhenExpression><![CDATA[$F{assignee} != null]]></printWhenExpression>
 			<staticText>
 				<reportElement mode="Opaque" x="0" y="0" width="555" height="20" backcolor="#CCCCCC" uuid="b5278a92-30c7-444b-95d1-b204c7d8df40"/>
 				<textElement>
@@ -349,11 +350,12 @@
 				<text><![CDATA[Assigned To]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="2" y="20" width="553" height="25" uuid="d5451772-355e-4e71-861f-aef77586acec"/>
+				<reportElement isPrintRepeatedValues="false" x="2" y="20" width="553" height="25" isRemoveLineWhenBlank="true" uuid="d5451772-355e-4e71-861f-aef77586acec"/>
 				<textFieldExpression><![CDATA[$F{assignee}]]></textFieldExpression>
 			</textField>
 		</band>
 		<band height="69">
+			<printWhenExpression><![CDATA[$F{notes} != null && $F{notes} != '']]></printWhenExpression>
 			<staticText>
 				<reportElement mode="Opaque" x="0" y="0" width="555" height="20" backcolor="#CCCCCC" uuid="0e6b34bc-17fe-49c3-aa2d-3530aff20d4d"/>
 				<textElement>
@@ -363,13 +365,13 @@
 				<text><![CDATA[Notes]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement stretchType="RelativeToBandHeight" x="0" y="20" width="555" height="49" isPrintWhenDetailOverflows="true" uuid="eb27be1e-c15a-439a-ab5e-4c90a230200f"/>
+				<reportElement stretchType="RelativeToBandHeight" x="0" y="20" width="540" height="49" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" uuid="eb27be1e-c15a-439a-ab5e-4c90a230200f"/>
 				<textFieldExpression><![CDATA[$F{notes}]]></textFieldExpression>
 			</textField>
 		</band>
-		<band height="70">
+		<band height="80">
 			<componentElement>
-				<reportElement key="table 2" style="table 2" stretchType="RelativeToBandHeight" x="0" y="0" width="555" height="60" isPrintWhenDetailOverflows="true" uuid="eee45dc9-19c7-4757-b790-3dcd1b7cd598"/>
+				<reportElement key="table 2" style="table 2" stretchType="RelativeToBandHeight" x="0" y="20" width="555" height="60" isPrintWhenDetailOverflows="true" uuid="eee45dc9-19c7-4757-b790-3dcd1b7cd598"/>
 				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
 					<datasetRun subDataset="Table Dataset 1" uuid="d17934c3-9e21-4619-add1-f21df98569f8">
 						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{workOrderItems})]]></dataSourceExpression>
@@ -448,8 +450,16 @@
 					</jr:column>
 				</jr:table>
 			</componentElement>
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="0" width="555" height="20" backcolor="#CCCCCC" uuid="051cb118-76f2-446d-be7d-648249817020"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<text><![CDATA[Items]]></text>
+			</staticText>
 		</band>
-		<band height="50">
+		<band height="28">
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement stretchType="RelativeToBandHeight" x="438" y="0" width="102" height="23" isPrintWhenDetailOverflows="true" uuid="9d8bb4bb-fe2d-49ec-9bdf-276f7a0328bd"/>
 				<textElement verticalAlignment="Middle">
@@ -465,9 +475,10 @@
 				<text><![CDATA[Total]]></text>
 			</staticText>
 		</band>
-		<band height="64">
+		<band height="80">
+			<printWhenExpression><![CDATA[$F{payments} != null && $F{payments}.size() > 0]]></printWhenExpression>
 			<componentElement>
-				<reportElement key="table 2" style="table 2" stretchType="RelativeToBandHeight" x="0" y="0" width="555" height="60" isPrintWhenDetailOverflows="true" uuid="31b5eac4-ba1d-4158-82d9-cc59360099c6"/>
+				<reportElement key="table 2" style="table 2" stretchType="RelativeToBandHeight" x="0" y="20" width="555" height="60" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" uuid="31b5eac4-ba1d-4158-82d9-cc59360099c6"/>
 				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
 					<datasetRun subDataset="Table Dataset 2" uuid="313f6904-79f7-46d9-a2e7-c4a54ddc4517">
 						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{payments})]]></dataSourceExpression>
@@ -528,17 +539,22 @@
 					</jr:column>
 				</jr:table>
 			</componentElement>
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="0" width="555" height="20" backcolor="#CCCCCC" uuid="51e48413-0d45-4f8d-b794-d57baf950907"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<text><![CDATA[Payments]]></text>
+			</staticText>
 		</band>
 	</detail>
 	<summary>
-		<band height="88" splitType="Stretch">
+		<band height="20" splitType="Stretch">
 			<textField pattern="dd/MM/yyyy">
-				<reportElement x="2" y="68" width="100" height="20" uuid="2e0e4c1f-3ad5-430b-a2fa-0046d7eb38e9"/>
+				<reportElement x="0" y="0" width="100" height="20" uuid="2e0e4c1f-3ad5-430b-a2fa-0046d7eb38e9"/>
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 			</textField>
-			<line>
-				<reportElement x="2" y="57" width="553" height="1" uuid="b10bf868-6f09-4b75-aa1a-ae873b832bfd"/>
-			</line>
 		</band>
 	</summary>
 </jasperReport>
