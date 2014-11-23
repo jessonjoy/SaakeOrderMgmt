@@ -195,24 +195,8 @@ public class ItemController implements Serializable {
 //        suggestItemList.add(new Item(9999,"Add New Item..."));
         
         if (Utils.notBlank(inp)) {
-            for (Item item : getItems()) {
-                if (Utils.notBlank(item.getItemCode())
-                        && item.getItemCode().toLowerCase().contains(inp.toString().trim().toLowerCase())) {
-
-                    suggestItemList.add(item);
-                } else if (Utils.notBlank(item.getDescription())
-                        && item.getDescription().toLowerCase().contains(inp.toString().trim().toLowerCase())) {
-
-                    suggestItemList.add(item);
-                } else if (Utils.notBlank(item.getName())
-                        && item.getName().toLowerCase().contains(inp.toString().trim().toLowerCase())) {
-
-                    suggestItemList.add(item);
-                } 
-            }
-        }
-        else{
-            suggestItemList.addAll(getItems());
+            List<Item> sugItems=ejbFacade.findSugItems(inp);
+            suggestItemList.addAll(sugItems);
         }
        
         if (Utils.isEmpty(suggestItemList)) {

@@ -39,6 +39,13 @@ public class ItemFacade extends AbstractFacade<Item> {
 
         return (List<Item>) getEntityManager().createQuery("select t from Item t where t.status is null or t.status = 'INACTIVE' order by t.itemId desc", Item.class).getResultList();
     }
+    
+    public List<Item> findSugItems(String inp) {
+        String qryStr="select t from Item t where " +
+            "upper(t.itemCode) like '%" + inp.toUpperCase() + "%' or upper(t.description) like '%" + inp.toUpperCase() + 
+            "%' or upper(t.name) like '%" + inp.toUpperCase() + "%' order by t.itemId desc";
+        return (List<Item>) getEntityManager().createQuery(qryStr, Item.class).getResultList();
+    }
 
     public void softDelete(Item item) {
         item.setStatus("DELETED");

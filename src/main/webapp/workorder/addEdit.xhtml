@@ -216,7 +216,7 @@
 
                             <p:inputTextarea rows="1" cols="40" value="#{woItem.description}" rendered="#{woItem.addItem or (empty woItem.item and not empty woItem.description)}"/>
 
-                            <p:autoComplete id="itemSugg" value="#{woItem.item}" completeMethod="#{itemController.suggestItem}" widgetVar="itemSuggComp"
+                            <p:autoComplete id="itemSugg" value="#{woItem.item}" completeMethod="#{itemController.suggestItem}" widgetVar="itemSuggComp" minQueryLength="2"
                                             var="item1" itemLabel="#{woItem.description}" itemValue="#{item1}" dropdown="true" size="49" 
                                             rendered="#{not (woItem.addItem or (empty woItem.item and not empty woItem.description))}">  
                                 <p:column>  
