@@ -233,7 +233,7 @@ public class WorkOrder implements Serializable {
     }
 
     public Double getDiscount() {
-        return discount;
+        return (discount==null)? 0.0 : discount;
     }
 
     public void setDiscount(Double discount) {
@@ -241,7 +241,7 @@ public class WorkOrder implements Serializable {
     }
 
     public Double getAmount() {
-        return amount;
+        return (amount-this.getDiscount());
     }
 
     public void setAmount(Double amount) {
@@ -491,7 +491,7 @@ public class WorkOrder implements Serializable {
     }
          
     public Double getPaymentDifference(){
-        return this.amount - this.getTransactionAmount();
+        return this.amount - this.getTransactionAmount() - this.getDiscount();
     }
          
     public String getStatusDisplay() {
