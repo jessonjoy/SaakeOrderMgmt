@@ -105,7 +105,7 @@ public class WorkOrder implements Serializable {
     private Date workOrderDate;
     
     @Column(name = "DISCOUNT")
-    private Integer discount;
+    private Double discount;
     
     @Column(name = "AMOUNT")
     private Double amount;
@@ -232,11 +232,11 @@ public class WorkOrder implements Serializable {
         this.workOrderDate = workOrderDate;
     }
 
-    public Integer getDiscount() {
+    public Double getDiscount() {
         return discount;
     }
 
-    public void setDiscount(Integer discount) {
+    public void setDiscount(Double discount) {
         this.discount = discount;
     }
 

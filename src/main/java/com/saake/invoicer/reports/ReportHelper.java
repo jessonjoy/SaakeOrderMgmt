@@ -70,6 +70,9 @@ public class ReportHelper {
             WorkOrderReportData dat = new WorkOrderReportData();
             
             dat.setAmount(viewOptions.showTotalAmount? wo.getAmount() : null);
+            dat.setPaidAmount(wo.getTransactionAmount());
+            dat.setBalanceAmount(wo.getAmount() - wo.getTransactionAmount());
+            dat.setDiscount(wo.getDiscount());
             dat.setWorkOrderDate(wo.getWorkOrderDate());
             dat.setInvoiceDate(wo.getInvoicedTs());
             dat.setWorkOrderItems(convertWorkOrderItems(wo));
