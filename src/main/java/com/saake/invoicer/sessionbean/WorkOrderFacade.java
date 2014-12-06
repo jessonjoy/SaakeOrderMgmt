@@ -79,7 +79,7 @@ public class WorkOrderFacade extends AbstractFacade<WorkOrder> {
         super(WorkOrder.class);
     }
 
-    public WorkOrder createWorkOrder(WorkOrder wo) {
+    public WorkOrder createWorkOrder(WorkOrder wo) throws Exception {
         
         preSaveActions(wo);               
 

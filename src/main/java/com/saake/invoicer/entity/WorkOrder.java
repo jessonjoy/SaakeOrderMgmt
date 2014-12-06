@@ -18,6 +18,7 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -161,13 +162,25 @@ public class WorkOrder implements Serializable {
     @Column(name = "UPDATED_BY")
     private String updatedBy;
     
-    @OneToMany(mappedBy = "workOrderId")
+    @Column(name = "OWN_PARTS_COST_AMT")
+    private Double ownPartsCostAmt;
+            
+    @Column(name = "OTHER_PARTS_COST_AMT")
+    private Double otherPartsCostAmt;
+            
+    @Column(name = "OWN_PARTS_DISC_AMT")
+    private Double ownPartsDiscAmt;
+            
+    @Column(name = "OTHER_PARTS_DISC_AMT")
+    private Double otherPartsDiscAmt;            
+    
+    @OneToMany(mappedBy = "workOrderId", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<WorkOrderItems> workOrderItems;
            
-    @OneToMany(mappedBy = "workOrderId")
+    @OneToMany(mappedBy = "workOrderId", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Collection<Transaction> transactions;
 
-    @OneToMany(mappedBy = "workOrderId")
+    @OneToMany(mappedBy = "workOrderId", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Collection<WorkOrderNotes> notes;
     
     public WorkOrder() {
@@ -392,6 +405,38 @@ public class WorkOrder implements Serializable {
         this.assignedUser = assignedUser;
     }       
 
+    public Double getOwnPartsCostAmt() {
+        return ownPartsCostAmt;
+    }
+
+    public void setOwnPartsCostAmt(Double ownPartsCostAmt) {
+        this.ownPartsCostAmt = ownPartsCostAmt;
+    }
+
+    public Double getOtherPartsCostAmt() {
+        return otherPartsCostAmt;
+    }
+
+    public void setOtherPartsCostAmt(Double otherPartsCostAmt) {
+        this.otherPartsCostAmt = otherPartsCostAmt;
+    }
+
+    public Double getOwnPartsDiscAmt() {
+        return ownPartsDiscAmt;
+    }
+
+    public void setOwnPartsDiscAmt(Double ownPartsDiscAmt) {
+        this.ownPartsDiscAmt = ownPartsDiscAmt;
+    }
+
+    public Double getOtherPartsDiscAmt() {
+        return otherPartsDiscAmt;
+    }
+
+    public void setOtherPartsDiscAmt(Double otherPartsDiscAmt) {
+        this.otherPartsDiscAmt = otherPartsDiscAmt;
+    }
+    
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
@@ -407,8 +452,8 @@ public class WorkOrder implements Serializable {
 
     @Override
     public String toString() {
-        return "com.saake.invoicer.entity.WorkOrder[ workOrderId=" + workOrderId + " ]";
-    }
+        return "WorkOrder{" + "workOrderId=" + workOrderId + ", workOrderNum=" + workOrderNum + ", custWorkDesc=" + custWorkDesc + ", workPerfDesc=" + workPerfDesc + ", workOrderDate=" + workOrderDate + ", discount=" + discount + ", amount=" + amount + ", advanceAmt=" + advanceAmt + ", laborAmt=" + laborAmt + ", laborAdjAmt=" + laborAdjAmt + ", customerId=" + customerId + ", assignedUser=" + assignedUser + ", vehicle=" + vehicle + ", status=" + status + ", paymentStatus=" + paymentStatus + ", isInvoiced=" + isInvoiced + ", deleted=" + deleted + ", createTs=" + createTs + ", updateTs=" + updateTs + ", invoicedTs=" + invoicedTs + ", createdBy=" + createdBy + ", updatedBy=" + updatedBy + ", workOrderItems=" + workOrderItems + ", transactions=" + transactions + ", notes=" + notes + '}';
+    }    
     
      public boolean isEmpty() {
         return this.customerId == null && this.vehicle == null && (this.amount == null || this.amount == 0) 

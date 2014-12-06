@@ -376,9 +376,24 @@
                     </f:facet>                        
                 </p:dataTable>                                             
 
-                <p:commandButton style="font-size:22px;float: right;margin-top: 10px;vertical-align: middle " rendered="false" 
-                                 action="#{workOrderCtrl.save}" value="#{source == 'createWorkOrder'? 'Create' : 'Save'}" icon="ui-icon-circle-check"  />
 
+                <br/>
+
+                <p:panel id="addnlFieldsPanel" collapsed="true" toggleable="true" header="Additional">
+                    <h:panelGrid columns="4" width="100%" styleClass="borderRound10 viewInfo" >
+                            <p:outputLabel value="Own Parts Cost Amount" for="custSugg" styleClass="bold"/>
+                            <h:inputText value="#{workOrderCtrl.current.ownPartsCostAmt}" styleClass="" />
+                            
+                            <p:outputLabel value="Other Parts Cost Amount" for="custSugg" styleClass="bold"/>
+                            <h:inputText value="#{workOrderCtrl.current.otherPartsCostAmt}" styleClass="" />
+                            
+                            <p:outputLabel value="Own Parts Discount Amount" for="custSugg" styleClass="bold"/>
+                            <h:inputText value="#{workOrderCtrl.current.ownPartsDiscAmt}" styleClass="" />
+                            
+                            <p:outputLabel value="Other Parts Discount Amount" for="custSugg" styleClass="bold"/>
+                            <h:inputText value="#{workOrderCtrl.current.otherPartsDiscAmt}" styleClass="" />                            
+                    </h:panelGrid>
+                </p:panel>
             </p:panel>
 
             <p:dialog id="addCustDg" header="New Customer" widgetVar="addCusPopup" modal="true" 

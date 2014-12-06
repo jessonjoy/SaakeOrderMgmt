@@ -7,6 +7,7 @@ package com.saake.invoicer.sessionbean;
 import java.util.List;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import org.apache.commons.logging.Log;
 
 /**
  *
@@ -14,6 +15,9 @@ import javax.persistence.EntityManager;
  */
 public abstract class AbstractFacade<T> {
     private Class<T> entityClass;
+        
+    @Inject
+    private Log log;
     
     @Inject
     private EntityManager em;
@@ -40,7 +44,7 @@ public abstract class AbstractFacade<T> {
         getEntityManager().getEntityManagerFactory().getCache().evict(entityClass);
     }
 
-    public T edit(T entity) {
+    public T edit(T entity) {               
         return getEntityManager().merge(entity);
     }
 
