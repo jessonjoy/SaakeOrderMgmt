@@ -308,6 +308,24 @@
                     <h:panelGrid width="100%" columns="1" columnClasses="noBorder" styleClass="borderRound10 viewInfo" >                        
                         <ui:include src="inc_view_woNotes.xhtml"/>
                     </h:panelGrid> 
+                    
+                    <p:spacer height="10px"/>        
+
+                    <p:panel id="addnlFieldsPanel11" collapsed="true" toggleable="true" header="Additional">
+                        <h:panelGrid columns="4" width="100%" styleClass="borderRound10 viewInfo" >
+                                <p:outputLabel value="Own Parts Cost Amount" styleClass="bold"/>
+                                <p:outputLabel value="#{workOrderCtrl.current.ownPartsCostAmt}" styleClass="" />
+
+                                <p:outputLabel value="Other Parts Cost Amount" styleClass="bold"/>
+                                <p:outputLabel value="#{workOrderCtrl.current.otherPartsCostAmt}" styleClass="" />
+
+                                <p:outputLabel value="Own Parts Discount Amount" styleClass="bold"/>
+                                <p:outputLabel value="#{workOrderCtrl.current.ownPartsDiscAmt}" styleClass="" />
+
+                                <p:outputLabel value="Other Parts Discount Amount" styleClass="bold"/>
+                                <p:outputLabel value="#{workOrderCtrl.current.otherPartsDiscAmt}" styleClass="" />                            
+                        </h:panelGrid>
+                    </p:panel>
                 </p:panel>
 
                 <h:panelGroup style="width:35%; margin:auto auto; overflow: hidden;" layout="block">
