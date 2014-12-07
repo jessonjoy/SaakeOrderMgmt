@@ -70,6 +70,11 @@ public class WorkOrder implements Serializable {
         current.updatedBy = that.updatedBy;
         current.paymentStatus = that.paymentStatus;
         current.transactions = that.transactions;
+        current.otherPartsCostAmt = that.otherPartsCostAmt;
+        current.otherPartsDiscAmt = that.otherPartsDiscAmt;
+        current.ownPartsCostAmt = that.ownPartsCostAmt;
+        current.ownPartsDiscAmt = that.ownPartsDiscAmt;
+        current.laborDiscAmt = that.laborAdjAmt;
         
         if(that.workOrderItems != null){
             current.workOrderItems = new ArrayList<>();
@@ -174,6 +179,9 @@ public class WorkOrder implements Serializable {
     @Column(name = "OTHER_PARTS_DISC_AMT")
     private Double otherPartsDiscAmt;            
     
+    @Column(name = "LABOR_DISC_AMT")
+    private Double laborDiscAmt;            
+
     @OneToMany(mappedBy = "workOrderId", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<WorkOrderItems> workOrderItems;
            
@@ -435,6 +443,14 @@ public class WorkOrder implements Serializable {
 
     public void setOtherPartsDiscAmt(Double otherPartsDiscAmt) {
         this.otherPartsDiscAmt = otherPartsDiscAmt;
+    }
+    
+    public Double getLaborDiscAmt() {
+        return laborDiscAmt;
+    }
+
+    public void setLaborDiscAmt(Double laborDiscAmt) {
+        this.laborDiscAmt = laborDiscAmt;
     }
     
     @Override
