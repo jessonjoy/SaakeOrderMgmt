@@ -90,6 +90,7 @@ public class WorkOrderController implements Serializable {
     private Boolean addNewVechicle = false;
     public Integer noOfRowsToAdd = 1;
     private boolean skipToWizardEnd;
+    private List<WorkOrderItems> orderItemsToDelete = new ArrayList<WorkOrderItems>();
 
     public WorkOrderController() {
         this.suggestVehicleList = new ArrayList<>();
@@ -204,6 +205,8 @@ public class WorkOrderController implements Serializable {
                     }
                     current.getWorkOrderItems().removeAll(emptyList);
                 }
+                                    
+                woFacade.deleteWorkOrderItems(orderItemsToDelete);
                 
                 if(currentNotes != null && Utils.notBlank(currentNotes.getNotes())){
                     currentNotes.setWorkOrderId(current);
@@ -322,6 +325,13 @@ public class WorkOrderController implements Serializable {
         if (ordItm != null) {
             if (current.getWorkOrderItems().size() > 1) {
                 current.getWorkOrderItems().remove(ordItm);
+                
+                orderItemsToDelete.add(ordItm);
+//                if(ordItm.getWorkOrderItemsId() != null){
+//                    getFacade().deleteWorkOrderItem(ordItm);
+//                    
+//                    current = getFacade().find(current.getWorkOrderId());
+//                }
             }
 
             calOrderPrice();

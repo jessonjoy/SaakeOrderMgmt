@@ -215,4 +215,28 @@ public class WorkOrderFacade extends AbstractFacade<WorkOrder> {
             wo.setPaymentStatus(PaymentStatusEnum.OVERPAY.name());
         }       
     }
+
+    public void deleteWorkOrderItem(WorkOrderItems ordItm) {        
+        getEntityManager().createNativeQuery("delete from work_order_items where work_order_items_id = ?").setParameter(1, ordItm.getWorkOrderItemsId()).executeUpdate();        
+        getEntityManager().flush();
+        clearCache();
+    }
+    
+    public void deleteWorkOrderItems(List<WorkOrderItems> ordItmList) {        
+        if(ordItmList != null && ordItmList.size() > 0){
+            List<Integer> keys = new ArrayList<>();
+            for(WorkOrderItems item : ordItmList){
+                keys.add(item.getWorkOrderItemsId());
+            }
+            
+            
+            if(keys.size() > 0){
+                String inKeys = Utils.joinIntValues(keys, ",");
+                
+                getEntityManager().createNativeQuery("delete from work_order_items where work_order_items_id in ( " + inKeys +" )").executeUpdate();        
+                getEntityManager().flush();
+                clearCache();
+            }        
+        }
+    }
 }

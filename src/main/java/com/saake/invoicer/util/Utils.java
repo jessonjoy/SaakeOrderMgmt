@@ -842,6 +842,21 @@ public class Utils {
         return sb.toString();
     }
 
+    public static String joinIntValues(List<Integer> coll, String delimiter) {
+        if (coll.isEmpty())
+            return "";
+
+        StringBuilder sb = new StringBuilder();
+
+        for (Integer x : coll) {
+            sb.append(x).append(delimiter);
+        }
+
+        sb.delete(sb.length() - delimiter.length(), sb.length());
+
+        return sb.toString();
+    }
+
     /**
      * Join a list of String to a delimited String
      *
